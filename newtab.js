@@ -44,6 +44,7 @@ const BLOOM_COLORS = [
   ['#8ADAB8', '#2d7a5a'],
   ['#FFD93D', '#7a6520'],
   ['#FFB6C1', '#7a2040'],
+  ['#FFDDE8', '#C4527A'],
 ];
 
 
@@ -516,7 +517,7 @@ function renderShortcuts() {
     const overflow  = sites.slice(ROW1_COUNT + ROW2_COUNT);
     row2Sites.forEach(site => row2.appendChild(buildShortcutCircle(site)));
 
-    // "More" — expands overflow into row 2
+    // "More" — toggles a popup with overflow shortcuts
     if (overflow.length > 0) {
       const more = document.createElement('button');
       more.className = 'shortcut-item shortcut-more';
@@ -528,10 +529,30 @@ function renderShortcuts() {
       mLabel.textContent = 'more';
       more.appendChild(mCircle);
       more.appendChild(mLabel);
-      more.onclick = () => {
-        overflow.forEach(site => row2.insertBefore(buildShortcutCircle(site), more));
-        more.remove();
+
+      // Build popup
+      const popup = document.createElement('div');
+      popup.id = 'more-popup';
+
+      const popupGrid = document.createElement('div');
+      popupGrid.id = 'more-popup-grid';
+      overflow.forEach(site => popupGrid.appendChild(buildShortcutCircle(site)));
+
+      popup.appendChild(popupGrid);
+      more.appendChild(popup);
+
+      more.onclick = (e) => {
+        e.stopPropagation();
+        const isOpen = more.classList.toggle('open');
+        popup.classList.toggle('open', isOpen);
       };
+
+      // Close popup when clicking outside
+      document.addEventListener('click', () => {
+        more.classList.remove('open');
+        popup.classList.remove('open');
+      });
+
       row2.appendChild(more);
     }
 
