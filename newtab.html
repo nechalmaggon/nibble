@@ -40,13 +40,12 @@ body {
     linear-gradient(90deg, rgba(255,182,193,.28) 1px, transparent 1px);
   background-size: var(--grid-size) var(--grid-size);
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
 }
 
 /* ═══════════════════════════════════════════════
-   WINDOW CHROME (shared by all widgets)
+   WINDOW CHROME
    ═══════════════════════════════════════════════ */
 .win {
   border-radius: 12px;
@@ -66,151 +65,43 @@ body {
 .bg-body { padding: 12px 14px 14px; }
 
 /* ═══════════════════════════════════════════════
-   TWO-COLUMN GRID LAYOUT
+   MAIN GRID — vertical, centred
    ═══════════════════════════════════════════════ */
 #grid {
   display: flex;
-  flex-direction: row;
-  gap: 36px;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
   position: relative;
   z-index: 20;
-  padding: 20px 0;
-}
-
-#left-panel {
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-#right-panel {
-  width: 510px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: center;
 }
 
 /* ═══════════════════════════════════════════════
-   SEARCH BAR
+   PAGE HEADING
    ═══════════════════════════════════════════════ */
-#win-search {
-  background: white;
-  border: 2px solid var(--pink);
-  border-radius: 999px;
-  overflow: hidden;
+#page-heading {
+  font-size: 9px;
+  color: var(--berry);
+  letter-spacing: 3px;
+  text-align: center;
+  white-space: nowrap;
 }
-#search-form {
+
+/* ═══════════════════════════════════════════════
+   MIDDLE ROW — tabs | nibble card | blooms
+   ═══════════════════════════════════════════════ */
+#middle-row {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 8px;
-  padding: 10px 10px 10px 18px;
+  gap: 20px;
 }
-#search-input {
-  flex: 1;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 7px;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--text-dark);
-  min-width: 0;
-}
-#search-input::placeholder { color: #d4a0b5; }
-#search-btn {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 6px;
-  background: var(--berry);
-  color: white;
-  border: none;
-  border-radius: 999px;
-  padding: 8px 14px;
-  cursor: pointer;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-#search-btn:hover { background: var(--berry-dark); }
 
 /* ═══════════════════════════════════════════════
-   SHORTCUTS ROW (Google-style circles)
-   ═══════════════════════════════════════════════ */
-#shortcuts-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 6px;
-}
-
-.shortcut-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  text-decoration: none;
-  cursor: pointer;
-  background: none;
-  border: none;
-  font-family: 'Press Start 2P', monospace;
-  padding: 0;
-}
-.shortcut-circle {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: white;
-  border: 2px solid var(--pink);
-  box-shadow: 3px 3px 0 var(--pink);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.1s, box-shadow 0.1s;
-}
-.shortcut-item:hover .shortcut-circle {
-  transform: translate(1px, 1px);
-  box-shadow: 2px 2px 0 var(--pink);
-}
-.shortcut-circle img {
-  width: 22px;
-  height: 22px;
-  border-radius: 4px;
-}
-.shortcut-label {
-  font-size: 5px;
-  color: var(--text-dark);
-  text-align: center;
-  max-width: 54px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* "More" circle — lavender */
-.shortcut-more .shortcut-circle {
-  background: var(--lavender);
-  border-color: var(--lavender-2);
-  box-shadow: 3px 3px 0 var(--lavender-2);
-  font-size: 13px;
-  color: #6b3fa0;
-  letter-spacing: 1px;
-}
-.shortcut-more:hover .shortcut-circle { box-shadow: 2px 2px 0 var(--lavender-2); }
-
-/* "Add" circle — yellow */
-.shortcut-add .shortcut-circle {
-  background: var(--yellow);
-  border-color: var(--yellow-2);
-  box-shadow: 3px 3px 0 var(--yellow-2);
-  font-size: 20px;
-  color: #7a6520;
-}
-.shortcut-add:hover .shortcut-circle { box-shadow: 2px 2px 0 var(--yellow-2); }
-
-/* ═══════════════════════════════════════════════
-   TABS.SYS (left panel)
+   TABS.SYS (left side panel)
    ═══════════════════════════════════════════════ */
 #win-tabs {
+  width: 200px;
   background: #f2fffb;
   border: 2px solid var(--mint-2);
   box-shadow: 4px 4px 0 var(--mint-2);
@@ -255,13 +146,12 @@ body {
 }
 
 /* ═══════════════════════════════════════════════
-   NIBBLE CARD + COOKIE MASCOT (right panel)
+   NIBBLE CARD + COOKIE MASCOT (centre)
    ═══════════════════════════════════════════════ */
 #center {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
 }
 
 #cookie-mascot {
@@ -352,10 +242,10 @@ body {
 }
 
 /* ═══════════════════════════════════════════════
-   BLOOMS.SYS (right panel)
+   BLOOMS.SYS (right side panel)
    ═══════════════════════════════════════════════ */
 #win-blooms {
-  width: 100%;
+  width: 200px;
   background: #f2fffb;
   border: 2px solid var(--mint-2);
   box-shadow: 4px 4px 0 var(--mint-2);
@@ -363,45 +253,92 @@ body {
 #win-blooms .titlebar { background: var(--mint); }
 #win-blooms .win-title { color: #2d7a5a; }
 .blooms-label { font-size: 5.5px; color: #2d7a5a; text-align: center; margin-bottom: 8px; }
-.blooms-row { display: flex; justify-content: space-around; align-items: center; }
+.blooms-row { display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 6px; }
 
 /* ═══════════════════════════════════════════════
-   TOO_MANY_NIBBLES.EXE (right panel)
+   SHORTCUTS — two rows below nibble card
    ═══════════════════════════════════════════════ */
-#win-nibbles {
-  width: 100%;
-  background: #faf6ff;
-  border: 2px solid var(--lavender-2);
-  box-shadow: 4px 4px 0 var(--lavender-2);
+#shortcuts-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
-#win-nibbles .titlebar { background: var(--lavender); }
-#win-nibbles .win-title { color: #6b3fa0; font-size: 5px; }
 
-.err-box {
-  background: #fff0fa;
-  border: 1.5px solid var(--lavender-2);
-  border-radius: 7px;
-  padding: 10px 12px;
-  text-align: center;
+#shortcuts-row-1,
+#shortcuts-row-2 {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  justify-content: center;
 }
-.err-hd    { font-size: 6px; color: var(--berry); margin-bottom: 6px; }
-.err-count { font-size: 13px; color: #6b3fa0; margin-bottom: 4px; }
-.err-sub   { font-size: 5px; color: #9b5fa5; line-height: 1.8; margin-bottom: 8px; }
-.err-btns  { display: flex; gap: 7px; justify-content: center; }
-.err-btn {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 5px;
-  padding: 5px 9px;
-  border: 1.5px solid var(--lavender-2);
-  border-radius: 3px;
+
+.shortcut-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
   cursor: pointer;
-  background: var(--lavender);
-  color: #6b3fa0;
+  background: none;
+  border: none;
+  font-family: 'Press Start 2P', monospace;
+  padding: 0;
 }
-.err-btn.ghost { background: #faf6ff; color: #9b5fa5; }
+.shortcut-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--pink);
+  box-shadow: 3px 3px 0 var(--pink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.shortcut-item:hover .shortcut-circle {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 var(--pink);
+}
+.shortcut-circle img {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+}
+.shortcut-label {
+  font-size: 5px;
+  color: var(--text-dark);
+  text-align: center;
+  max-width: 54px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* "More" circle — lavender */
+.shortcut-more .shortcut-circle {
+  background: var(--lavender);
+  border-color: var(--lavender-2);
+  box-shadow: 3px 3px 0 var(--lavender-2);
+  font-size: 13px;
+  color: #6b3fa0;
+  letter-spacing: 1px;
+}
+.shortcut-more:hover .shortcut-circle { box-shadow: 2px 2px 0 var(--lavender-2); }
+
+/* "Add" circle — yellow */
+.shortcut-add .shortcut-circle {
+  background: var(--yellow);
+  border-color: var(--yellow-2);
+  box-shadow: 3px 3px 0 var(--yellow-2);
+  font-size: 20px;
+  color: #7a6520;
+}
+.shortcut-add:hover .shortcut-circle { box-shadow: 2px 2px 0 var(--yellow-2); }
 
 /* ═══════════════════════════════════════════════
-   KAWAII CHARACTERS (outer viewport edges)
+   KAWAII CHARACTERS
    ═══════════════════════════════════════════════ */
 .k-char {
   position: absolute;
@@ -415,19 +352,14 @@ body {
 
 #kc-cloudclock { left: 11%; top: 12%; animation: float3 8s   ease-in-out infinite; }
 #kc-cloudclock img { width: 66px; }
-
 #kc-plantpot   { left: 11%; top: 40%; animation: float2 6s   ease-in-out infinite; }
 #kc-plantpot img { width: 62px; }
-
 #kc-moon       { left: 11%; top: 65%; animation: float  7s   ease-in-out infinite; }
 #kc-moon img   { width: 62px; }
-
 #kc-blob       { right: 11%; top: 12%; animation: float2 7s   ease-in-out infinite; }
 #kc-blob img   { width: 56px; }
-
 #kc-notebook   { right: 11%; top: 40%; animation: float3 5.5s ease-in-out infinite; }
 #kc-notebook img { width: 66px; }
-
 #kc-toast      { right: 11%; top: 65%; animation: float2 6.5s ease-in-out infinite; }
 #kc-toast img  { width: 66px; }
 
@@ -447,7 +379,6 @@ body {
      viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice"
      xmlns="http://www.w3.org/2000/svg">
 
-  <!-- ── FLOWERS ── -->
   <g transform="translate(78,72)">
     <circle cx="0" cy="-16" r="11" fill="#FFB6C1" opacity=".7"/>
     <circle cx="13.9" cy="-8" r="11" fill="#FFB6C1" opacity=".7"/>
@@ -525,8 +456,6 @@ body {
     <ellipse cx="-9" cy="0" rx="9" ry="5" fill="#FFDDE8" opacity=".6"/>
     <circle cx="0" cy="0" r="4.5" fill="#C4527A" opacity=".38"/>
   </g>
-
-  <!-- ── SPARKLES ── -->
   <path d="M0,-13 L2,-2 L13,0 L2,2 L0,13 L-2,2 L-13,0 L-2,-2 Z"
         transform="translate(175,120)" fill="none" stroke="#FFB6C1" stroke-width="1.8" opacity=".7"/>
   <path d="M0,-10 L1.5,-1.5 L10,0 L1.5,1.5 L0,10 L-1.5,1.5 L-10,0 L-1.5,-1.5 Z"
@@ -543,8 +472,6 @@ body {
         transform="translate(700,55)" fill="#C4527A" opacity=".4"/>
   <path d="M0,-8 L1.2,-1.2 L8,0 L1.2,1.2 L0,8 L-1.2,1.2 L-8,0 L-1.2,-1.2 Z"
         transform="translate(440,30)" fill="none" stroke="#FFB6C1" stroke-width="1.4" opacity=".5"/>
-
-  <!-- ── OUTLINE STARS ── -->
   <polygon transform="translate(1020,195) scale(.9)"
     points="0,-13 3.1,-4.2 12.4,-3.8 5.0,2.0 7.6,11.2 0,6.5 -7.6,11.2 -5.0,2.0 -12.4,-3.8 -3.1,-4.2"
     fill="none" stroke="#E8D5F5" stroke-width="1.8" opacity=".75"/>
@@ -560,8 +487,6 @@ body {
   <polygon transform="translate(60,290) scale(.65)"
     points="0,-13 3.1,-4.2 12.4,-3.8 5.0,2.0 7.6,11.2 0,6.5 -7.6,11.2 -5.0,2.0 -12.4,-3.8 -3.1,-4.2"
     fill="none" stroke="#E8D5F5" stroke-width="1.5" opacity=".65"/>
-
-  <!-- ── HEARTS ── -->
   <path transform="translate(330,80) scale(.9)"
     d="M0,7 C0,7 -12,-5 -12,-10 C-12,-15 -6,-17 0,-12 C6,-17 12,-15 12,-10 C12,-5 0,7 0,7Z"
     fill="none" stroke="#FFB6C1" stroke-width="2" opacity=".7"/>
@@ -577,17 +502,13 @@ body {
   <path transform="translate(760,738) scale(.7)"
     d="M0,7 C0,7 -12,-5 -12,-10 C-12,-15 -6,-17 0,-12 C6,-17 12,-15 12,-10 C12,-5 0,7 0,7Z"
     fill="#FFB6C1" opacity=".55"/>
-
-  <!-- ── DOTS ── -->
-  <circle cx="148" cy="35"  r="4" fill="#FFB6C1" opacity=".55"/>
+  <circle cx="148" cy="35"   r="4"   fill="#FFB6C1" opacity=".55"/>
   <circle cx="1068" cy="145" r="3.5" fill="#C3A8E8" opacity=".6"/>
-  <circle cx="490" cy="18"  r="3" fill="#FFB6C1" opacity=".5"/>
-  <circle cx="720" cy="742" r="4" fill="#C4527A" opacity=".35"/>
-  <circle cx="1195" cy="220" r="3" fill="#FFDDE8" opacity=".65"/>
-  <circle cx="25" cy="600"  r="3.5" fill="#FFB6C1" opacity=".5"/>
-  <circle cx="960" cy="745" r="3" fill="#FFB6C1" opacity=".5"/>
-
-  <!-- ── LEAF CLUSTERS ── -->
+  <circle cx="490" cy="18"   r="3"   fill="#FFB6C1" opacity=".5"/>
+  <circle cx="720" cy="742"  r="4"   fill="#C4527A" opacity=".35"/>
+  <circle cx="1195" cy="220" r="3"   fill="#FFDDE8" opacity=".65"/>
+  <circle cx="25" cy="600"   r="3.5" fill="#FFB6C1" opacity=".5"/>
+  <circle cx="960" cy="745"  r="3"   fill="#FFB6C1" opacity=".5"/>
   <g transform="translate(1045,718)" opacity=".6">
     <ellipse cx="-8" cy="0" rx="8" ry="5" fill="#8ADAB8" opacity=".65" transform="rotate(-30,-8,0)"/>
     <ellipse cx="0" cy="-6" rx="8" ry="5" fill="#8ADAB8" opacity=".65" transform="rotate(10,0,-6)"/>
@@ -600,8 +521,6 @@ body {
     <ellipse cx="7" cy="2"  rx="7" ry="4.5" fill="#8ADAB8" opacity=".65" transform="rotate(45,7,2)"/>
     <circle cx="0" cy="0" r="3.5" fill="#2d7a5a" opacity=".35"/>
   </g>
-
-  <!-- ── CROSS MARKS ── -->
   <g transform="translate(470,62)" opacity=".5">
     <line x1="-7" y1="0" x2="7" y2="0" stroke="#FFB6C1" stroke-width="2" stroke-linecap="round"/>
     <line x1="0" y1="-7" x2="0" y2="7" stroke="#FFB6C1" stroke-width="2" stroke-linecap="round"/>
@@ -618,65 +537,32 @@ body {
     <line x1="-5" y1="0" x2="5" y2="0" stroke="#C4527A" stroke-width="1.8" stroke-linecap="round"/>
     <line x1="0" y1="-5" x2="0" y2="5" stroke="#C4527A" stroke-width="1.8" stroke-linecap="round"/>
   </g>
-
 </svg>
 
 <!-- ══ KAWAII CHARACTERS ══ -->
-<div id="kc-cloudclock" class="k-char">
-  <img src="assets/characters/char_cloudclock.png" alt="">
-</div>
-<div id="kc-plantpot" class="k-char">
-  <img src="assets/characters/char_plantpot.png" alt="">
-</div>
-<div id="kc-moon" class="k-char">
-  <img src="assets/characters/char_moon.png" alt="">
-</div>
-<div id="kc-blob" class="k-char">
-  <img src="assets/characters/char_blob.png" alt="">
-</div>
-<div id="kc-notebook" class="k-char">
-  <img src="assets/characters/char_notebook.png" alt="">
-</div>
-<div id="kc-toast" class="k-char">
-  <img src="assets/characters/char_toast.png" alt="">
-</div>
+<div id="kc-cloudclock" class="k-char"><img src="assets/characters/char_cloudclock.png" alt=""></div>
+<div id="kc-plantpot"   class="k-char"><img src="assets/characters/char_plantpot.png"   alt=""></div>
+<div id="kc-moon"       class="k-char"><img src="assets/characters/char_moon.png"        alt=""></div>
+<div id="kc-blob"       class="k-char"><img src="assets/characters/char_blob.png"        alt=""></div>
+<div id="kc-notebook"   class="k-char"><img src="assets/characters/char_notebook.png"    alt=""></div>
+<div id="kc-toast"      class="k-char"><img src="assets/characters/char_toast.png"       alt=""></div>
 
-<!-- ══ DESKTOP GRID ══ -->
+<!-- ══ MAIN GRID ══ -->
 <div id="grid">
 
-  <!-- ── LEFT PANEL ── -->
-  <div id="left-panel">
+  <p id="page-heading">your nibble for the day</p>
 
-    <!-- Search bar -->
-    <div id="win-search">
-      <form id="search-form" autocomplete="off">
-        <input id="search-input" type="text" placeholder="search the web..." spellcheck="false">
-        <button type="submit" id="search-btn">go →</button>
-      </form>
-    </div>
+  <!-- ── MIDDLE ROW ── -->
+  <div id="middle-row">
 
-    <!-- Shortcuts -->
-    <div id="shortcuts-row">
-      <!-- shortcut circles injected by JS -->
-    </div>
-
-    <!-- Recent tabs -->
     <div id="win-tabs" class="win">
       <div class="titlebar">
         <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
         <span class="win-title">tabs.sys</span>
       </div>
-      <div id="tabs-list">
-        <!-- .tab-item items injected by JS -->
-      </div>
+      <div id="tabs-list"></div>
     </div>
 
-  </div>
-
-  <!-- ── RIGHT PANEL ── -->
-  <div id="right-panel">
-
-    <!-- Cookie mascot + Nibble card -->
     <div id="center">
       <div id="cookie-mascot">
         <img id="cookie-img" src="" alt="today's nibble cookie">
@@ -698,7 +584,6 @@ body {
       </div>
     </div>
 
-    <!-- Blooms garden -->
     <div id="win-blooms" class="win">
       <div class="titlebar">
         <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
@@ -710,25 +595,12 @@ body {
       </div>
     </div>
 
-    <!-- Nibbles counter -->
-    <div id="win-nibbles" class="win">
-      <div class="titlebar">
-        <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-        <span class="win-title">TOO_MANY_NIBBLES.EXE</span>
-      </div>
-      <div class="bg-body">
-        <div class="err-box">
-          <div class="err-hd">⚠ BACKLOG OVERFLOW</div>
-          <div class="err-count" id="unread-count">0 unread</div>
-          <div class="err-sub">dangerously uncurious ♡</div>
-          <div class="err-btns">
-            <button class="err-btn" id="btn-read-one">read one</button>
-            <button class="err-btn ghost" id="btn-ignore">ignore</button>
-          </div>
-        </div>
-      </div>
-    </div>
+  </div>
 
+  <!-- ── SHORTCUTS ── -->
+  <div id="shortcuts-area">
+    <div id="shortcuts-row-1"></div>
+    <div id="shortcuts-row-2"></div>
   </div>
 
 </div>

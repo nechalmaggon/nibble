@@ -54,7 +54,6 @@ const BLOOM_COLORS = [
   renderBlooms();
   renderShortcuts();
   renderRecentTabs();
-  document.getElementById('search-form').addEventListener('submit', handleSearch);
 
   try {
     const today   = getToday();
@@ -459,12 +458,6 @@ function renderArticle(article, allArticles) {
     } catch {}
   };
 
-  // Unread count
-  const unread = (allArticles || []).filter(a => !a.read).length;
-  document.getElementById('unread-count').textContent = `${unread} unread`;
-
-  document.getElementById('btn-read-one').onclick = () => btn.click();
-  document.getElementById('btn-ignore').onclick = () => {};
 }
 
 function renderEmpty() {
@@ -473,13 +466,13 @@ function renderEmpty() {
   document.getElementById('article-desc').classList.add('hidden');
   document.getElementById('article-title').textContent = 'no nibble today :(';
   document.getElementById('nibble-btn').style.display = 'none';
-  document.getElementById('unread-count').textContent = '0 unread';
 }
 
 
 // ─── Shortcuts ────────────────────────────────────────────────────────────────
 
-const MAX_SHORTCUTS = 6;
+const ROW1_COUNT = 5;
+const ROW2_COUNT = 2;
 
 function buildShortcutCircle(site) {
   let hostname = '';
@@ -511,63 +504,50 @@ function buildShortcutCircle(site) {
 
 function renderShortcuts() {
   chrome.topSites.get(sites => {
-    const row = document.getElementById('shortcuts-row');
-    if (!row) return;
+    const row1 = document.getElementById('shortcuts-row-1');
+    const row2 = document.getElementById('shortcuts-row-2');
+    if (!row1 || !row2) return;
 
-    const visible  = sites.slice(0, MAX_SHORTCUTS);
-    const overflow = sites.slice(MAX_SHORTCUTS);
+    // Row 1: first 5
+    sites.slice(0, ROW1_COUNT).forEach(site => row1.appendChild(buildShortcutCircle(site)));
 
-    visible.forEach(site => row.appendChild(buildShortcutCircle(site)));
+    // Row 2: next 2
+    const row2Sites = sites.slice(ROW1_COUNT, ROW1_COUNT + ROW2_COUNT);
+    const overflow  = sites.slice(ROW1_COUNT + ROW2_COUNT);
+    row2Sites.forEach(site => row2.appendChild(buildShortcutCircle(site)));
 
-    // "More" button — expands overflow shortcuts inline
+    // "More" — expands overflow into row 2
     if (overflow.length > 0) {
       const more = document.createElement('button');
       more.className = 'shortcut-item shortcut-more';
-
-      const circle = document.createElement('div');
-      circle.className = 'shortcut-circle';
-      circle.textContent = '···';
-
-      const label = document.createElement('span');
-      label.className = 'shortcut-label';
-      label.textContent = 'more';
-
-      more.appendChild(circle);
-      more.appendChild(label);
+      const mCircle = document.createElement('div');
+      mCircle.className = 'shortcut-circle';
+      mCircle.textContent = '···';
+      const mLabel = document.createElement('span');
+      mLabel.className = 'shortcut-label';
+      mLabel.textContent = 'more';
+      more.appendChild(mCircle);
+      more.appendChild(mLabel);
       more.onclick = () => {
-        overflow.forEach(site => row.insertBefore(buildShortcutCircle(site), more));
+        overflow.forEach(site => row2.insertBefore(buildShortcutCircle(site), more));
         more.remove();
       };
-      row.appendChild(more);
+      row2.appendChild(more);
     }
 
-    // "Add" circle — always last
+    // "Add" — always last in row 2
     const add = document.createElement('button');
     add.className = 'shortcut-item shortcut-add';
-
-    const addCircle = document.createElement('div');
-    addCircle.className = 'shortcut-circle';
-    addCircle.textContent = '+';
-
-    const addLabel = document.createElement('span');
-    addLabel.className = 'shortcut-label';
-    addLabel.textContent = 'add';
-
-    add.appendChild(addCircle);
-    add.appendChild(addLabel);
-    row.appendChild(add);
+    const aCircle = document.createElement('div');
+    aCircle.className = 'shortcut-circle';
+    aCircle.textContent = '+';
+    const aLabel = document.createElement('span');
+    aLabel.className = 'shortcut-label';
+    aLabel.textContent = 'add';
+    add.appendChild(aCircle);
+    add.appendChild(aLabel);
+    row2.appendChild(add);
   });
-}
-
-
-// ─── Search ───────────────────────────────────────────────────────────────────
-
-function handleSearch(e) {
-  e.preventDefault();
-  const q = document.getElementById('search-input').value.trim();
-  if (q) {
-    window.location.href = 'https://www.google.com/search?q=' + encodeURIComponent(q);
-  }
 }
 
 
