@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Nibble",
+  "version": "1.0",
+  "description": "One starred newsletter a day, waiting on your new tab.",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "permissions": [
+    "identity",
+    "storage",
+    "topSites",
+    "sessions"
+  ],
+  "host_permissions": [
+    "https://www.googleapis.com/*"
+  ],
+  "oauth2": {
+    "client_id": "149091077220-fjfe97pher3520kkt4b734do60bhqise.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ]
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
