@@ -10,7 +10,8 @@
     "identity",
     "storage",
     "topSites",
-    "sessions"
+    "sessions",
+    "tabs"
   ],
   "host_permissions": [
     "https://www.googleapis.com/*"
