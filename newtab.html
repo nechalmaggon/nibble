@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>nibble — new tab</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   DESIGN TOKENS
+   ═══════════════════════════════════════════════ */
+:root {
+  --blush:     #FFF8FA;
+  --pink:      #FFB6C1;
+  --pink-dark: #FFDDE8;
+  --berry:     #C4527A;
+  --berry-dark:#7a2040;
+  --lavender:  #E8D5F5;
+  --lavender-2:#C3A8E8;
+  --yellow:    #FFF3CC;
+  --yellow-2:  #E2D075;
+  --mint:      #D4F5E9;
+  --mint-2:    #8ADAB8;
+  --peach:     #FFECD2;
+  --text-dark: #3d1a28;
+  --grid-size: 39px;
+}
+
+/* ═══════════════════════════════════════════════
+   BASE
+   ═══════════════════════════════════════════════ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+
+body {
+  font-family: 'Press Start 2P', monospace;
+  background: var(--blush);
+  background-image:
+    linear-gradient(rgba(255,182,193,.28) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,182,193,.28) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ═══════════════════════════════════════════════
+   WINDOW CHROME
+   ═══════════════════════════════════════════════ */
+.win {
+  border-radius: 12px;
+  overflow: hidden;
+}
+.titlebar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 13px;
+}
+.dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+.dot-r { background: #FF6B6B; }
+.dot-y { background: #FFD93D; }
+.dot-g { background: #6BCB77; }
+.win-title { margin-left: 7px; font-size: 7px; letter-spacing: -.2px; }
+.bg-body { padding: 12px 14px 14px; }
+
+/* ═══════════════════════════════════════════════
+   MAIN GRID — vertical, centred
+   ═══════════════════════════════════════════════ */
+#grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  position: relative;
+  z-index: 20;
+}
+
+/* ═══════════════════════════════════════════════
+   PAGE HEADING
+   ═══════════════════════════════════════════════ */
+#page-heading {
+  font-size: 14px;
+  color: var(--berry);
+  letter-spacing: 3px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════════
+   MIDDLE ROW — tabs | nibble card | blooms
+   ═══════════════════════════════════════════════ */
+#middle-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+
+/* ═══════════════════════════════════════════════
+   TABS.SYS (left side panel)
+   ═══════════════════════════════════════════════ */
+#win-tabs {
+  width: 200px;
+  background: #FFFCF4;
+  border: 2px solid #FFF3BF;
+  box-shadow: 4px 4px 0 #FFF3BF;
+}
+#win-tabs .titlebar { background: #FFF3BF; }
+#win-tabs .win-title { color: #7a6520; }
+
+#tabs-list {
+  padding: 8px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tab-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 8px;
+  text-decoration: none;
+  border-radius: 7px;
+  cursor: pointer;
+}
+.tab-item:hover { background: rgba(226, 208, 117, 0.2); }
+.tab-favicon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  border-radius: 3px;
+}
+.tab-title {
+  font-size: 7px;
+  color: var(--text-dark);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tabs-empty {
+  font-size: 7px;
+  color: #7a6520;
+  text-align: center;
+  padding: 10px 0 4px;
+}
+
+/* ═══════════════════════════════════════════════
+   NIBBLE CARD + COOKIE MASCOT (centre)
+   ═══════════════════════════════════════════════ */
+#center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#cookie-mascot {
+  text-align: center;
+  margin-bottom: -20px;
+  position: relative;
+  z-index: 25;
+}
+#cookie-mascot img {
+  width: 80px;
+  height: auto;
+  filter: drop-shadow(0 4px 10px rgba(196,82,122,.25));
+}
+
+#main {
+  position: relative;
+  width: 510px;
+  background: #fff;
+  border: 2.5px solid var(--berry);
+  box-shadow: 7px 7px 0 var(--berry), 0 28px 80px rgba(196,82,122,.12);
+  border-radius: 14px;
+  overflow: hidden;
+  animation: float 5s ease-in-out infinite;
+}
+#main .titlebar { background: var(--pink); }
+#main .win-title { color: var(--berry-dark); }
+
+.main-body {
+  padding: 30px 44px 34px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.author-pill {
+  border: 2px solid var(--pink);
+  color: var(--berry);
+  padding: 9px 26px;
+  border-radius: 999px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  white-space: nowrap;
+}
+.author-pill.hidden { display: none; }
+
+.article-date {
+  font-size: 9px;
+  color: #8a5070;
+  letter-spacing: 0.04em;
+}
+.article-date.hidden { display: none; }
+
+.article-title {
+  font-size: 13px;
+  color: var(--text-dark);
+  text-align: center;
+  line-height: 1.85;
+}
+
+.article-desc {
+  font-size: 7px;
+  color: #8a6a74;
+  line-height: 2.1;
+  text-align: center;
+  width: 100%;
+  max-width: 370px;
+}
+.article-desc.hidden { display: none; }
+
+.nibble-btn {
+  background: var(--berry);
+  color: #fff;
+  border: 2.5px solid var(--berry-dark);
+  box-shadow: 4px 4px 0 var(--berry-dark);
+  padding: 14px 44px;
+  border-radius: 999px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: transform .1s, box-shadow .1s;
+}
+.nibble-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--berry-dark);
+}
+
+/* ═══════════════════════════════════════════════
+   BLOOMS.SYS (right side panel)
+   ═══════════════════════════════════════════════ */
+#win-blooms {
+  width: 200px;
+  background: #f2fffb;
+  border: 2px solid var(--mint-2);
+  box-shadow: 4px 4px 0 var(--mint-2);
+}
+#win-blooms .titlebar { background: var(--mint); }
+#win-blooms .win-title { color: #2d7a5a; }
+.blooms-label { font-size: 5.5px; color: #2d7a5a; text-align: center; margin-bottom: 8px; }
+.blooms-row { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 6px; }
+
+/* ═══════════════════════════════════════════════
+   SHORTCUTS — two rows below nibble card
+   ═══════════════════════════════════════════════ */
+#shortcuts-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+#shortcuts-row-1,
+#shortcuts-row-2 {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: center;
+}
+
+.shortcut-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: 'Press Start 2P', monospace;
+  padding: 0;
+}
+.shortcut-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--pink);
+  box-shadow: 3px 3px 0 var(--pink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.shortcut-item:hover .shortcut-circle {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 var(--pink);
+}
+.shortcut-circle img {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+}
+.shortcut-label {
+  font-size: 7px;
+  color: var(--text-dark);
+  text-align: center;
+  max-width: 64px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* "More" circle — lavender */
+.shortcut-more {
+  position: relative;
+}
+.shortcut-more .shortcut-circle {
+  background: var(--lavender);
+  border-color: var(--lavender-2);
+  box-shadow: 3px 3px 0 var(--lavender-2);
+  font-size: 13px;
+  color: #6b3fa0;
+  letter-spacing: 1px;
+}
+.shortcut-more:hover .shortcut-circle { box-shadow: 2px 2px 0 var(--lavender-2); }
+.shortcut-more.open .shortcut-circle {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 var(--lavender-2);
+}
+
+/* More dropdown popup */
+#more-popup {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  background: #FFF8FA;
+  border: 1.5px solid var(--pink-dark);
+  box-shadow: 0 6px 24px rgba(196,82,122,.13);
+  border-radius: 18px;
+  min-width: 200px;
+}
+#more-popup.open { display: block; }
+#more-popup-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 16px 18px;
+  justify-content: center;
+}
+
+/* "Add" circle — yellow */
+.shortcut-add .shortcut-circle {
+  background: var(--yellow);
+  border-color: var(--yellow-2);
+  box-shadow: 3px 3px 0 var(--yellow-2);
+  font-size: 20px;
+  color: #7a6520;
+}
+.shortcut-add:hover .shortcut-circle { box-shadow: 2px 2px 0 var(--yellow-2); }
+
+/* ═══════════════════════════════════════════════
+   KAWAII CHARACTERS
+   ═══════════════════════════════════════════════ */
+.k-char {
+  position: absolute;
+  z-index: 15;
+  pointer-events: none;
+}
+.k-char img {
+  height: auto;
+  filter: drop-shadow(0 3px 8px rgba(196,82,122,.18));
+}
+
+#kc-cloudclock { left: 11%; top: 12%; animation: float3 8s   ease-in-out infinite; }
+#kc-cloudclock img { width: 66px; }
+#kc-plantpot   { left: 11%; top: 40%; animation: float2 6s   ease-in-out infinite; }
+#kc-plantpot img { width: 62px; }
+#kc-moon       { left: 11%; top: 65%; animation: float  7s   ease-in-out infinite; }
+#kc-moon img   { width: 62px; }
+#kc-blob       { right: 11%; top: 12%; animation: float2 7s   ease-in-out infinite; }
+#kc-blob img   { width: 56px; }
+#kc-notebook   { right: 11%; top: 40%; animation: float3 5.5s ease-in-out infinite; }
+#kc-notebook img { width: 66px; }
+#kc-toast      { right: 11%; top: 65%; animation: float2 6.5s ease-in-out infinite; }
+#kc-toast img  { width: 66px; }
+
+/* ═══════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════ */
+@keyframes float  { 0%,100%{transform:translateY(0)}         50%{transform:translateY(-7px)} }
+@keyframes float2 { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-5px) rotate(2deg)} }
+@keyframes float3 { 0%,100%{transform:translateY(0) rotate(1deg)}  50%{transform:translateY(-6px) rotate(-1deg)} }
+</style>
+</head>
+<body>
+
+<!-- ══ DECORATION SVG LAYER ══ -->
+<svg id="deco-layer"
+     style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:3"
+     viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice"
+     xmlns="http://www.w3.org/2000/svg">
+
+  <g transform="translate(78,72)">
+    <circle cx="0" cy="-16" r="11" fill="#FFB6C1" opacity=".7"/>
+    <circle cx="13.9" cy="-8" r="11" fill="#FFB6C1" opacity=".7"/>
+    <circle cx="13.9" cy="8"  r="11" fill="#FFB6C1" opacity=".7"/>
+    <circle cx="0"   cy="16" r="11" fill="#FFB6C1" opacity=".7"/>
+    <circle cx="-13.9" cy="8" r="11" fill="#FFB6C1" opacity=".7"/>
+    <circle cx="-13.9" cy="-8" r="11" fill="#FFB6C1" opacity=".7"/>
+    <circle cx="0" cy="0" r="9" fill="#C4527A" opacity=".55"/>
+  </g>
+  <g transform="translate(44,165)">
+    <circle cx="0" cy="-11" r="8" fill="#FFDDE8" opacity=".75"/>
+    <circle cx="9.5" cy="-5.5" r="8" fill="#FFDDE8" opacity=".75"/>
+    <circle cx="9.5" cy="5.5"  r="8" fill="#FFDDE8" opacity=".75"/>
+    <circle cx="0"   cy="11"  r="8" fill="#FFDDE8" opacity=".75"/>
+    <circle cx="-9.5" cy="5.5" r="8" fill="#FFDDE8" opacity=".75"/>
+    <circle cx="-9.5" cy="-5.5" r="8" fill="#FFDDE8" opacity=".75"/>
+    <circle cx="0" cy="0" r="7" fill="#C4527A" opacity=".45"/>
+  </g>
+  <g transform="translate(258,36)">
+    <circle cx="0" cy="-9" r="6.5" fill="#FFB6C1" opacity=".6"/>
+    <circle cx="7.8" cy="-4.5" r="6.5" fill="#FFB6C1" opacity=".6"/>
+    <circle cx="7.8" cy="4.5"  r="6.5" fill="#FFB6C1" opacity=".6"/>
+    <circle cx="0"   cy="9"   r="6.5" fill="#FFB6C1" opacity=".6"/>
+    <circle cx="-7.8" cy="4.5" r="6.5" fill="#FFB6C1" opacity=".6"/>
+    <circle cx="-7.8" cy="-4.5" r="6.5" fill="#FFB6C1" opacity=".6"/>
+    <circle cx="0" cy="0" r="5.5" fill="#C4527A" opacity=".4"/>
+  </g>
+  <g transform="translate(1148,88)">
+    <circle cx="0" cy="-14" r="10" fill="#FFB6C1" opacity=".65"/>
+    <circle cx="12.1" cy="-7" r="10" fill="#FFB6C1" opacity=".65"/>
+    <circle cx="12.1" cy="7"  r="10" fill="#FFB6C1" opacity=".65"/>
+    <circle cx="0"   cy="14" r="10" fill="#FFB6C1" opacity=".65"/>
+    <circle cx="-12.1" cy="7" r="10" fill="#FFB6C1" opacity=".65"/>
+    <circle cx="-12.1" cy="-7" r="10" fill="#FFB6C1" opacity=".65"/>
+    <circle cx="0" cy="0" r="8" fill="#C4527A" opacity=".5"/>
+  </g>
+  <g transform="translate(95,668)">
+    <circle cx="0" cy="-13" r="9" fill="#FFDDE8" opacity=".7"/>
+    <circle cx="11.3" cy="-6.5" r="9" fill="#FFDDE8" opacity=".7"/>
+    <circle cx="11.3" cy="6.5"  r="9" fill="#FFDDE8" opacity=".7"/>
+    <circle cx="0"   cy="13"  r="9" fill="#FFDDE8" opacity=".7"/>
+    <circle cx="-11.3" cy="6.5" r="9" fill="#FFDDE8" opacity=".7"/>
+    <circle cx="-11.3" cy="-6.5" r="9" fill="#FFDDE8" opacity=".7"/>
+    <circle cx="0" cy="0" r="8" fill="#C4527A" opacity=".48"/>
+  </g>
+  <g transform="translate(1085,695)">
+    <circle cx="0" cy="-10" r="7" fill="#FFB6C1" opacity=".65"/>
+    <circle cx="8.7" cy="-5" r="7" fill="#FFB6C1" opacity=".65"/>
+    <circle cx="8.7" cy="5"  r="7" fill="#FFB6C1" opacity=".65"/>
+    <circle cx="0"   cy="10" r="7" fill="#FFB6C1" opacity=".65"/>
+    <circle cx="-8.7" cy="5" r="7" fill="#FFB6C1" opacity=".65"/>
+    <circle cx="-8.7" cy="-5" r="7" fill="#FFB6C1" opacity=".65"/>
+    <circle cx="0" cy="0" r="6" fill="#C4527A" opacity=".45"/>
+  </g>
+  <g transform="translate(590,738)">
+    <circle cx="0" cy="-9" r="6.5" fill="#FFDDE8" opacity=".6"/>
+    <circle cx="7.8" cy="-4.5" r="6.5" fill="#FFDDE8" opacity=".6"/>
+    <circle cx="7.8" cy="4.5"  r="6.5" fill="#FFDDE8" opacity=".6"/>
+    <circle cx="0"   cy="9"   r="6.5" fill="#FFDDE8" opacity=".6"/>
+    <circle cx="-7.8" cy="4.5" r="6.5" fill="#FFDDE8" opacity=".6"/>
+    <circle cx="-7.8" cy="-4.5" r="6.5" fill="#FFDDE8" opacity=".6"/>
+    <circle cx="0" cy="0" r="5.5" fill="#C4527A" opacity=".4"/>
+  </g>
+  <g transform="translate(1160,420)">
+    <ellipse cx="0" cy="-10" rx="5.5" ry="10" fill="#FFB6C1" opacity=".55"/>
+    <ellipse cx="10" cy="0"  rx="10" ry="5.5" fill="#FFB6C1" opacity=".55"/>
+    <ellipse cx="0" cy="10"  rx="5.5" ry="10" fill="#FFB6C1" opacity=".55"/>
+    <ellipse cx="-10" cy="0" rx="10" ry="5.5" fill="#FFB6C1" opacity=".55"/>
+    <circle cx="0" cy="0" r="5" fill="#C4527A" opacity=".4"/>
+  </g>
+  <g transform="translate(38,380)">
+    <ellipse cx="0" cy="-9" rx="5" ry="9" fill="#FFDDE8" opacity=".6"/>
+    <ellipse cx="9" cy="0"  rx="9" ry="5" fill="#FFDDE8" opacity=".6"/>
+    <ellipse cx="0" cy="9"  rx="5" ry="9" fill="#FFDDE8" opacity=".6"/>
+    <ellipse cx="-9" cy="0" rx="9" ry="5" fill="#FFDDE8" opacity=".6"/>
+    <circle cx="0" cy="0" r="4.5" fill="#C4527A" opacity=".38"/>
+  </g>
+  <path d="M0,-13 L2,-2 L13,0 L2,2 L0,13 L-2,2 L-13,0 L-2,-2 Z"
+        transform="translate(175,120)" fill="none" stroke="#FFB6C1" stroke-width="1.8" opacity=".7"/>
+  <path d="M0,-10 L1.5,-1.5 L10,0 L1.5,1.5 L0,10 L-1.5,1.5 L-10,0 L-1.5,-1.5 Z"
+        transform="translate(1040,50)" fill="none" stroke="#FFB6C1" stroke-width="1.5" opacity=".65"/>
+  <path d="M0,-8 L1.2,-1.2 L8,0 L1.2,1.2 L0,8 L-1.2,1.2 L-8,0 L-1.2,-1.2 Z"
+        transform="translate(340,700)" fill="#FFB6C1" opacity=".5"/>
+  <path d="M0,-11 L1.7,-1.7 L11,0 L1.7,1.7 L0,11 L-1.7,1.7 L-11,0 L-1.7,-1.7 Z"
+        transform="translate(870,710)" fill="none" stroke="#C4527A" stroke-width="1.5" opacity=".5"/>
+  <path d="M0,-7 L1.1,-1.1 L7,0 L1.1,1.1 L0,7 L-1.1,1.1 L-7,0 L-1.1,-1.1 Z"
+        transform="translate(1110,310)" fill="#FFDDE8" opacity=".65"/>
+  <path d="M0,-9 L1.4,-1.4 L9,0 L1.4,1.4 L0,9 L-1.4,1.4 L-9,0 L-1.4,-1.4 Z"
+        transform="translate(140,540)" fill="none" stroke="#FFB6C1" stroke-width="1.5" opacity=".55"/>
+  <path d="M0,-6 L.9,-.9 L6,0 L.9,.9 L0,6 L-.9,.9 L-6,0 L-.9,-.9 Z"
+        transform="translate(700,55)" fill="#C4527A" opacity=".4"/>
+  <path d="M0,-8 L1.2,-1.2 L8,0 L1.2,1.2 L0,8 L-1.2,1.2 L-8,0 L-1.2,-1.2 Z"
+        transform="translate(440,30)" fill="none" stroke="#FFB6C1" stroke-width="1.4" opacity=".5"/>
+  <polygon transform="translate(1020,195) scale(.9)"
+    points="0,-13 3.1,-4.2 12.4,-3.8 5.0,2.0 7.6,11.2 0,6.5 -7.6,11.2 -5.0,2.0 -12.4,-3.8 -3.1,-4.2"
+    fill="none" stroke="#E8D5F5" stroke-width="1.8" opacity=".75"/>
+  <polygon transform="translate(200,690) scale(.75)"
+    points="0,-13 3.1,-4.2 12.4,-3.8 5.0,2.0 7.6,11.2 0,6.5 -7.6,11.2 -5.0,2.0 -12.4,-3.8 -3.1,-4.2"
+    fill="none" stroke="#FFB6C1" stroke-width="1.6" opacity=".6"/>
+  <polygon transform="translate(490,720) scale(.6)"
+    points="0,-13 3.1,-4.2 12.4,-3.8 5.0,2.0 7.6,11.2 0,6.5 -7.6,11.2 -5.0,2.0 -12.4,-3.8 -3.1,-4.2"
+    fill="none" stroke="#C3A8E8" stroke-width="1.5" opacity=".55"/>
+  <polygon transform="translate(1175,560) scale(.7)"
+    points="0,-13 3.1,-4.2 12.4,-3.8 5.0,2.0 7.6,11.2 0,6.5 -7.6,11.2 -5.0,2.0 -12.4,-3.8 -3.1,-4.2"
+    fill="none" stroke="#FFB6C1" stroke-width="1.5" opacity=".6"/>
+  <polygon transform="translate(60,290) scale(.65)"
+    points="0,-13 3.1,-4.2 12.4,-3.8 5.0,2.0 7.6,11.2 0,6.5 -7.6,11.2 -5.0,2.0 -12.4,-3.8 -3.1,-4.2"
+    fill="none" stroke="#E8D5F5" stroke-width="1.5" opacity=".65"/>
+  <path transform="translate(330,80) scale(.9)"
+    d="M0,7 C0,7 -12,-5 -12,-10 C-12,-15 -6,-17 0,-12 C6,-17 12,-15 12,-10 C12,-5 0,7 0,7Z"
+    fill="none" stroke="#FFB6C1" stroke-width="2" opacity=".7"/>
+  <path transform="translate(905,55) scale(.75)"
+    d="M0,7 C0,7 -12,-5 -12,-10 C-12,-15 -6,-17 0,-12 C6,-17 12,-15 12,-10 C12,-5 0,7 0,7Z"
+    fill="#FFDDE8" opacity=".65"/>
+  <path transform="translate(55,480) scale(.8)"
+    d="M0,7 C0,7 -12,-5 -12,-10 C-12,-15 -6,-17 0,-12 C6,-17 12,-15 12,-10 C12,-5 0,7 0,7Z"
+    fill="none" stroke="#C4527A" stroke-width="1.8" opacity=".45"/>
+  <path transform="translate(1140,640) scale(.85)"
+    d="M0,7 C0,7 -12,-5 -12,-10 C-12,-15 -6,-17 0,-12 C6,-17 12,-15 12,-10 C12,-5 0,7 0,7Z"
+    fill="none" stroke="#FFB6C1" stroke-width="1.8" opacity=".6"/>
+  <path transform="translate(760,738) scale(.7)"
+    d="M0,7 C0,7 -12,-5 -12,-10 C-12,-15 -6,-17 0,-12 C6,-17 12,-15 12,-10 C12,-5 0,7 0,7Z"
+    fill="#FFB6C1" opacity=".55"/>
+  <circle cx="148" cy="35"   r="4"   fill="#FFB6C1" opacity=".55"/>
+  <circle cx="1068" cy="145" r="3.5" fill="#C3A8E8" opacity=".6"/>
+  <circle cx="490" cy="18"   r="3"   fill="#FFB6C1" opacity=".5"/>
+  <circle cx="720" cy="742"  r="4"   fill="#C4527A" opacity=".35"/>
+  <circle cx="1195" cy="220" r="3"   fill="#FFDDE8" opacity=".65"/>
+  <circle cx="25" cy="600"   r="3.5" fill="#FFB6C1" opacity=".5"/>
+  <circle cx="960" cy="745"  r="3"   fill="#FFB6C1" opacity=".5"/>
+  <g transform="translate(1045,718)" opacity=".6">
+    <ellipse cx="-8" cy="0" rx="8" ry="5" fill="#8ADAB8" opacity=".65" transform="rotate(-30,-8,0)"/>
+    <ellipse cx="0" cy="-6" rx="8" ry="5" fill="#8ADAB8" opacity=".65" transform="rotate(10,0,-6)"/>
+    <ellipse cx="8" cy="2"  rx="8" ry="5" fill="#8ADAB8" opacity=".65" transform="rotate(40,8,2)"/>
+    <circle cx="0" cy="0" r="4" fill="#2d7a5a" opacity=".4"/>
+  </g>
+  <g transform="translate(158,728)" opacity=".55">
+    <ellipse cx="-7" cy="0" rx="7" ry="4.5" fill="#8ADAB8" opacity=".65" transform="rotate(-25,-7,0)"/>
+    <ellipse cx="0" cy="-5" rx="7" ry="4.5" fill="#8ADAB8" opacity=".65" transform="rotate(15,0,-5)"/>
+    <ellipse cx="7" cy="2"  rx="7" ry="4.5" fill="#8ADAB8" opacity=".65" transform="rotate(45,7,2)"/>
+    <circle cx="0" cy="0" r="3.5" fill="#2d7a5a" opacity=".35"/>
+  </g>
+  <g transform="translate(470,62)" opacity=".5">
+    <line x1="-7" y1="0" x2="7" y2="0" stroke="#FFB6C1" stroke-width="2" stroke-linecap="round"/>
+    <line x1="0" y1="-7" x2="0" y2="7" stroke="#FFB6C1" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(840,40)" opacity=".45">
+    <line x1="-6" y1="0" x2="6" y2="0" stroke="#C3A8E8" stroke-width="2" stroke-linecap="round"/>
+    <line x1="0" y1="-6" x2="0" y2="6" stroke="#C3A8E8" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(1130,490)" opacity=".5">
+    <line x1="-6" y1="0" x2="6" y2="0" stroke="#FFB6C1" stroke-width="2" stroke-linecap="round"/>
+    <line x1="0" y1="-6" x2="0" y2="6" stroke="#FFB6C1" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(28,155)" opacity=".45">
+    <line x1="-5" y1="0" x2="5" y2="0" stroke="#C4527A" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="0" y1="-5" x2="0" y2="5" stroke="#C4527A" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+</svg>
+
+<!-- ══ KAWAII CHARACTERS ══ -->
+<div id="kc-cloudclock" class="k-char"><img src="assets/characters/char_cloudclock.png" alt=""></div>
+<div id="kc-plantpot"   class="k-char"><img src="assets/characters/char_plantpot.png"   alt=""></div>
+<div id="kc-moon"       class="k-char"><img src="assets/characters/char_moon.png"        alt=""></div>
+<div id="kc-blob"       class="k-char"><img src="assets/characters/char_blob.png"        alt=""></div>
+<div id="kc-notebook"   class="k-char"><img src="assets/characters/char_notebook.png"    alt=""></div>
+<div id="kc-toast"      class="k-char"><img src="assets/characters/char_toast.png"       alt=""></div>
+
+<!-- ══ MAIN GRID ══ -->
+<div id="grid">
+
+  <p id="page-heading">your nibble for the day</p>
+
+  <!-- ── MIDDLE ROW ── -->
+  <div id="middle-row">
+
+    <div id="win-tabs" class="win">
+      <div class="titlebar">
+        <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+        <span class="win-title">continue.tabs.sys</span>
+      </div>
+      <div id="tabs-list"></div>
+    </div>
+
+    <div id="center">
+      <div id="cookie-mascot">
+        <img id="cookie-img" src="" alt="today's nibble cookie">
+      </div>
+      <div id="main" class="win">
+        <div class="titlebar">
+          <span class="dot dot-r"></span>
+          <span class="dot dot-y"></span>
+          <span class="dot dot-g"></span>
+          <span class="win-title">nibble.exe</span>
+        </div>
+        <div class="main-body">
+          <span class="author-pill" id="author-label"></span>
+          <p class="article-date" id="article-date"></p>
+          <h1 class="article-title" id="article-title"></h1>
+          <p class="article-desc" id="article-desc"></p>
+          <button class="nibble-btn" id="nibble-btn">Nibble</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="win-blooms" class="win">
+      <div class="titlebar">
+        <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+        <span class="win-title">BLOOMS.SYS</span>
+      </div>
+      <div class="bg-body">
+        <p class="blooms-label">✿ today's garden ✿</p>
+        <div class="blooms-row" id="blooms-flowers"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── SHORTCUTS ── -->
+  <div id="shortcuts-area">
+    <div id="shortcuts-row-1"></div>
+    <div id="shortcuts-row-2"></div>
+  </div>
+
+</div>
+
+<script src="newtab.js"></script>
+</body>
+</html>

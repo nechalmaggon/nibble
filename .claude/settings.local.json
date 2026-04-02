@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \":*)",
+      "Bash(cp /Users/nechalmaggon/Downloads/files/cookie_*.png /Users/nechalmaggon/Desktop/nibble/assets/cookies/)",
+      "Bash(cp /Users/nechalmaggon/Downloads/files/char_*.png /Users/nechalmaggon/Desktop/nibble/assets/characters/)",
+      "Bash(python3 -:*)",
+      "Bash(node --check /Users/nechalmaggon/Desktop/nibble/newtab.js)",
+      "Bash(python3 -c \":*)",
+      "Bash(/usr/local/bin/node --check /Users/nechalmaggon/Desktop/nibble/newtab.js)"
+    ]
+  }
+}
