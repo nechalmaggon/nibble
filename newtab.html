@@ -72,6 +72,56 @@
   --grid-size:            40px;
 }
 
+[data-theme="matcha"] {
+  /* Page */
+  --page-bg:              #F4FAF6;
+  --page-grid-color:      rgba(168,197,160,.25);
+
+  /* Brand accent */
+  --accent:               #3D6B4F;
+  --accent-dark:          #2A4A36;
+
+  /* Shadows / tints */
+  --mascot-shadow:        rgba(61,107,79,.25);
+  --card-ambient-shadow:  rgba(61,107,79,.12);
+  --modal-overlay-bg:     rgba(61,107,79,.18);
+  --popup-shadow:         rgba(61,107,79,.13);
+  --char-shadow:          rgba(61,107,79,.18);
+
+  /* Typography */
+  --text-primary:         #1A2E22;
+  --heading-color:        #3D6B4F;
+  --article-date-color:   #4A7A5A;
+  --article-desc-color:   #5A7A64;
+
+  /* Main card / modal chrome */
+  --titlebar-bg:          #A8C5A0;
+  --soft-border:          #A8C5A0;
+  --popup-border:         #C8DFC4;
+
+  /* Tabs panel */
+  --tabs-bg:              #FAFFF4;
+  --tabs-accent:          #D4EDDA;
+  --tabs-text:            #3D6B4F;
+  --tab-hover-bg:         rgba(168,197,160,.2);
+
+  /* Blooms panel */
+  --blooms-bg:            #F0FBF4;
+  --blooms-border:        #6BAF8A;
+  --blooms-titlebar-bg:   #B8E8CC;
+  --blooms-text:          #2A5A40;
+
+  /* "More" shortcut */
+  --more-btn-bg:          #D5EDD8;
+  --more-btn-border:      #8ABF94;
+  --more-btn-color:       #2A5A40;
+
+  /* "Add" shortcut */
+  --add-btn-bg:           #EDFAF0;
+  --add-btn-border:       #8ABF94;
+  --add-btn-color:        #3D6B4F;
+}
+
 /* ═══════════════════════════════════════════════
    BASE
    ═══════════════════════════════════════════════ */
@@ -530,6 +580,76 @@ body {
   transform: translate(2px, 2px);
   box-shadow: 2px 2px 0 var(--accent-dark);
 }
+
+/* ─── Theme Switcher ──────────────────────────────────────────────────────── */
+#theme-switcher {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 300;
+}
+
+#theme-toggle-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  padding: 8px 14px;
+  background: var(--surface-bg);
+  border: 1px solid var(--soft-border);
+  border-radius: 999px;
+  color: var(--text-primary);
+  cursor: pointer;
+  box-shadow: 0 4px 16px var(--card-ambient-shadow);
+  white-space: nowrap;
+}
+
+#theme-panel {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  background: var(--surface-bg);
+  border: 1px solid var(--soft-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px var(--card-ambient-shadow);
+  padding: 6px;
+  min-width: 200px;
+}
+#theme-panel.open { display: block; }
+
+.theme-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: var(--text-primary);
+}
+.theme-row:hover { background: var(--page-grid-color); }
+
+.swatch-cluster {
+  display: flex;
+  flex-shrink: 0;
+}
+.swatch-cluster span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: block;
+  border: 1px solid rgba(0,0,0,.08);
+}
+.swatch-cluster span + span { margin-left: -4px; }
+
+.theme-name { flex: 1; }
+
+.theme-check {
+  color: var(--accent);
+  font-size: 10px;
+  visibility: hidden;
+}
+.theme-row.active .theme-check { visibility: visible; }
 </style>
 </head>
 <body>
@@ -788,6 +908,31 @@ body {
       <button id="modal-save-btn">save</button>
     </div>
   </div>
+</div>
+
+<!-- ══ THEME SWITCHER ══ -->
+<div id="theme-switcher">
+  <div id="theme-panel">
+    <div class="theme-row" data-theme-key="default">
+      <div class="swatch-cluster">
+        <span style="background:#FFF8FA"></span>
+        <span style="background:#FFB6C1"></span>
+        <span style="background:#C4527A"></span>
+      </div>
+      <span class="theme-name">cherry blossom</span>
+      <span class="theme-check">✓</span>
+    </div>
+    <div class="theme-row" data-theme-key="matcha">
+      <div class="swatch-cluster">
+        <span style="background:#F4FAF6"></span>
+        <span style="background:#A8C5A0"></span>
+        <span style="background:#3D6B4F"></span>
+      </div>
+      <span class="theme-name">matcha</span>
+      <span class="theme-check">✓</span>
+    </div>
+  </div>
+  <button id="theme-toggle-btn">✦ set the vibe ✦</button>
 </div>
 
 <script src="newtab.js"></script>

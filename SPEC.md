@@ -1,6 +1,6 @@
 # Nibble — Product Specification
 
-**Version:** 1.0
+**Version:** 1.1
 **Last updated:** 2026-04-03
 
 ---
@@ -104,6 +104,7 @@ If a match is found and the href starts with `http`, that URL is used. Otherwise
 | `chrome.storage.local` | `nibble_articles` | Full array of all fetched article objects |
 | `chrome.storage.local` | `nibble_current` | `{ id, date }` — today's selected article |
 | `chrome.storage.local` | `nibble_custom_shortcuts` | Array of user-added shortcuts: `{ id, title, url, addedAt }` |
+| `chrome.storage.local` | `nibble_theme` | Active theme key (`"default"` or `"matcha"`); absent = default |
 | `localStorage` | `nibble_seen` | Array of article IDs already shown on previous days |
 
 ---
@@ -242,7 +243,40 @@ The main article display — a white window-style card (510px wide) with:
 - Closes on: red dot click, outside click (overlay), or Escape key
 - On save, the shortcuts row re-renders immediately without a page reload
 
-### 7. Kawaii Characters
+### 7. Theme Switcher
+
+A floating pill button fixed to the **bottom-right corner** (`bottom: 24px; right: 24px`) that lets the user change the page's color theme.
+
+**Button:**
+- Label: `✦ set the vibe ✦` in Press Start 2P, 9px
+- Shape: pill (`border-radius: 999px`)
+- Background: `var(--surface-bg)`, border: `1px solid var(--soft-border)`
+- Shadow: `0 4px 16px var(--card-ambient-shadow)` (soft only — no hard offset)
+- `z-index: 300` (above all other layers)
+- Clicking toggles the picker panel open/closed
+
+**Picker panel:**
+- Appears directly above the button, right-aligned
+- Small rounded card with the same soft shadow and border as the button
+- No title bar — just a list of theme rows
+- Closes when clicking anywhere outside
+
+**Theme rows:**
+Each row contains a swatch cluster (3 × 12px circles with slight overlap), the theme name in Press Start 2P at 8px, and a `✓` checkmark (in `var(--accent)`) on the active row. Hover tints the row with `var(--page-grid-color)`.
+
+**Available themes:**
+
+| Key | Display name | Swatch colours |
+|---|---|---|
+| `default` | cherry blossom | `#FFF8FA`, `#FFB6C1`, `#C4527A` |
+| `matcha` | matcha | `#F4FAF6`, `#A8C5A0`, `#3D6B4F` |
+
+**Theme application:**
+- Themes are implemented as CSS `[data-theme="key"]` overrides on `<body>` that re-define all design tokens. The `default` theme removes the `data-theme` attribute entirely so the `:root` defaults apply.
+- The selected theme is saved to `chrome.storage.local` under `nibble_theme` and restored on every page load.
+- All UI components use `var()` tokens throughout, so they re-skin automatically when the theme changes.
+
+### 8. Kawaii Characters
 Six floating kawaii characters positioned around the left and right edges of the screen. They are purely decorative (`pointer-events: none`).
 
 | ID | Image | Position | Animation |
@@ -261,7 +295,7 @@ Six floating kawaii characters positioned around the left and right edges of the
 
 Note: A 7th character asset (`char_shoe.png`) and an 8th (`char_workout.png`) exist in the assets folder but are not used in the current layout.
 
-### 8. Decoration Layer
+### 9. Decoration Layer
 An SVG layer (`z-index: 3`) fills the entire background with scattered decorative elements:
 - **Flowers** (circle-petal style): 6 variations in pink/blush at various corners
 - **Four-petal flowers** (ellipse style): 2 variations in pink/blush on left and right edges
@@ -276,24 +310,83 @@ An SVG layer (`z-index: 3`) fills the entire background with scattered decorativ
 
 ## Design System
 
+### Theming Architecture
+
+All colours are defined as CSS custom properties on `:root`. Theme overrides are applied via `[data-theme="key"]` blocks on `<body>` that redefine any tokens that change. Components reference only `var()` tokens — no hardcoded hex values — so they re-skin automatically.
+
+**Theme keys:**
+- `default` — no `data-theme` attribute; `:root` values apply (cherry blossom palette)
+- `matcha` — `data-theme="matcha"` on `<body>`
+
 ### Colors (CSS Custom Properties)
 
-| Token | Value | Usage |
+**Semantic tokens (used by all components):**
+
+| Token | Default value | Usage |
 |---|---|---|
-| `--blush` | `#FFF8FA` | Page background |
-| `--pink` | `#FFB6C1` | Primary accent, borders |
-| `--pink-dark` | `#FFDDE8` | Light pink, popup borders |
-| `--berry` | `#C4527A` | Primary action color, headings |
-| `--berry-dark` | `#7a2040` | Button shadow, deep accent |
-| `--lavender` | `#E8D5F5` | "More" button background |
-| `--lavender-2` | `#C3A8E8` | "More" button border/shadow |
-| `--yellow` | `#FFF3CC` | Tabs panel background |
-| `--yellow-2` | `#E2D075` | Tabs panel border/shadow |
-| `--mint` | `#D4F5E9` | Blooms panel title bar |
-| `--mint-2` | `#8ADAB8` | Blooms panel border/shadow |
-| `--peach` | `#FFECD2` | Defined but unused |
-| `--text-dark` | `#3d1a28` | Primary body text |
-| `--grid-size` | `39px` | Background grid spacing |
+| `--page-bg` | `#FFF8FA` | Page background |
+| `--page-grid-color` | `rgba(255,182,193,.28)` | Background grid lines |
+| `--accent` | `#C4527A` | Primary action color, headings, checkmarks |
+| `--accent-dark` | `#7a2040` | Button shadow, deep accent |
+| `--surface-bg` | `#fff` | Card / modal / button background |
+| `--text-primary` | `#3d1a28` | Primary body text |
+| `--heading-color` | `#C4527A` | Page heading |
+| `--article-date-color` | `#8a5070` | Article date |
+| `--article-desc-color` | `#8a6a74` | Article description |
+| `--titlebar-bg` | `#FFB6C1` | Window title bar background |
+| `--soft-border` | `#FFB6C1` | Card / modal borders |
+| `--popup-border` | `#FFDDE8` | Popup / overflow panel borders |
+| `--mascot-shadow` | `rgba(196,82,122,.25)` | Cookie mascot drop-shadow |
+| `--card-ambient-shadow` | `rgba(196,82,122,.12)` | Soft ambient shadow (theme switcher, panels) |
+| `--modal-overlay-bg` | `rgba(196,82,122,.18)` | Shortcut modal backdrop |
+| `--popup-shadow` | `rgba(196,82,122,.13)` | Overflow popup shadow |
+| `--char-shadow` | `rgba(196,82,122,.18)` | Kawaii character shadows |
+| `--tabs-bg` | `#FFFCF4` | TABS.SYS panel background |
+| `--tabs-accent` | `#FFF3BF` | TABS.SYS title bar |
+| `--tabs-text` | `#7a6520` | TABS.SYS text |
+| `--tab-hover-bg` | `rgba(226,208,117,.2)` | Tab item hover tint |
+| `--blooms-bg` | `#f2fffb` | BLOOMS.SYS panel background |
+| `--blooms-border` | `#8ADAB8` | BLOOMS.SYS border/shadow |
+| `--blooms-titlebar-bg` | `#D4F5E9` | BLOOMS.SYS title bar |
+| `--blooms-text` | `#2d7a5a` | BLOOMS.SYS text |
+| `--more-btn-bg` | `#E8D5F5` | "More" shortcut button background |
+| `--more-btn-border` | `#C3A8E8` | "More" shortcut button border |
+| `--more-btn-color` | `#6b3fa0` | "More" shortcut button text |
+| `--add-btn-bg` | `#FFF3CC` | "Add" shortcut button background |
+| `--add-btn-border` | `#E2D075` | "Add" shortcut button border |
+| `--add-btn-color` | `#7a6520` | "Add" shortcut button text |
+| `--grid-size` | `40px` | Background grid spacing |
+
+**Matcha theme overrides (`[data-theme="matcha"]`):**
+
+| Token | Matcha value |
+|---|---|
+| `--page-bg` | `#F4FAF6` |
+| `--page-grid-color` | `rgba(168,197,160,.25)` |
+| `--accent` | `#3D6B4F` |
+| `--accent-dark` | `#2A4A36` |
+| `--text-primary` | `#1A2E22` |
+| `--heading-color` | `#3D6B4F` |
+| `--article-date-color` | `#4A7A5A` |
+| `--article-desc-color` | `#5A7A64` |
+| `--titlebar-bg` | `#A8C5A0` |
+| `--soft-border` | `#A8C5A0` |
+| `--popup-border` | `#C8DFC4` |
+| `--tabs-bg` | `#FAFFF4` |
+| `--tabs-accent` | `#D4EDDA` |
+| `--tabs-text` | `#3D6B4F` |
+| `--tab-hover-bg` | `rgba(168,197,160,.2)` |
+| `--blooms-bg` | `#F0FBF4` |
+| `--blooms-border` | `#6BAF8A` |
+| `--blooms-titlebar-bg` | `#B8E8CC` |
+| `--blooms-text` | `#2A5A40` |
+| `--more-btn-bg` | `#D5EDD8` |
+| `--more-btn-border` | `#8ABF94` |
+| `--more-btn-color` | `#2A5A40` |
+| `--add-btn-bg` | `#EDFAF0` |
+| `--add-btn-border` | `#8ABF94` |
+| `--add-btn-color` | `#3D6B4F` |
+| Shadow tokens | Adjusted to `rgba(61,107,79,…)` equivalents |
 
 ### Typography
 - **Font:** Press Start 2P (Google Fonts) — a pixel/retro monospace font used throughout
@@ -352,3 +445,4 @@ nibble/
 | `char_shoe.png` and `char_workout.png` | Assets exist but not placed on screen |
 | Article refresh / manual re-fetch | No way for user to force a new fetch without clearing storage |
 | Seen-list persistence across browser profiles | `localStorage` is tab-page local; won't sync across devices |
+| Additional themes | Only two themes exist (cherry blossom, matcha); picker is built to support more rows |

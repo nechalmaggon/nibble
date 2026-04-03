@@ -51,7 +51,55 @@ const BLOOM_COLORS = [
 
 // ─── Entry point ──────────────────────────────────────────────────────────────
 
+// ─── Theme ────────────────────────────────────────────────────────────────────
+
+function applyTheme(theme) {
+  if (theme === 'default') {
+    delete document.body.dataset.theme;
+  } else {
+    document.body.dataset.theme = theme;
+  }
+  document.querySelectorAll('.theme-row').forEach(row => {
+    row.classList.toggle('active', row.dataset.themeKey === theme);
+  });
+}
+
+function initThemeSwitcher(currentTheme) {
+  const switcher  = document.getElementById('theme-switcher');
+  const panel     = document.getElementById('theme-panel');
+  const toggleBtn = document.getElementById('theme-toggle-btn');
+
+  // Mark active row on load
+  document.querySelectorAll('.theme-row').forEach(row => {
+    row.classList.toggle('active', row.dataset.themeKey === currentTheme);
+  });
+
+  toggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    panel.classList.toggle('open');
+  });
+
+  document.querySelectorAll('.theme-row').forEach(row => {
+    row.addEventListener('click', () => {
+      const key = row.dataset.themeKey;
+      applyTheme(key);
+      storageSet({ nibble_theme: key });
+      panel.classList.remove('open');
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!switcher.contains(e.target)) panel.classList.remove('open');
+  });
+}
+
 (async function main() {
+  // Load theme from storage (no-op if unset; :root defaults apply)
+  const themeResult = await storageGet(['nibble_theme']);
+  const savedTheme  = themeResult.nibble_theme || 'default';
+  applyTheme(savedTheme);
+  initThemeSwitcher(savedTheme);
+
   setCookieMascot();
   renderBlooms();
   renderShortcuts();
