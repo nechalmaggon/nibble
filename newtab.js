@@ -1,8 +1,9 @@
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const STORAGE_KEY_ARTICLES = 'nibble_articles';
-const STORAGE_KEY_CURRENT  = 'nibble_current';
-const STORAGE_KEY_SEEN     = 'nibble_seen';
+const STORAGE_KEY_ARTICLES        = 'nibble_articles';
+const STORAGE_KEY_CURRENT         = 'nibble_current';
+const STORAGE_KEY_SEEN            = 'nibble_seen';
+const STORAGE_KEY_CUSTOM_SHORTCUTS = 'nibble_custom_shortcuts';
 
 const GMAIL_SEARCH_URL =
   'https://www.googleapis.com/gmail/v1/users/me/messages?q=is%3Astarred&maxResults=50';
@@ -76,9 +77,9 @@ const BLOOM_COLORS = [
     let unseen   = articles.filter(a => !seen.includes(a.id));
 
     if (unseen.length === 0 && articles.length > 0) {
-      // Seen everything — reset and start over
-      seen   = [];
-      unseen = articles;
+      // Seen everything — prompt user to star more newsletters
+      renderEmpty('all nibbled up! ✦ star more newsletters to see them here');
+      return;
     }
 
     if (unseen.length > 0) {
@@ -461,11 +462,11 @@ function renderArticle(article, allArticles) {
 
 }
 
-function renderEmpty() {
+function renderEmpty(message = 'no nibble today :(') {
   document.getElementById('author-label').classList.add('hidden');
   document.getElementById('article-date').classList.add('hidden');
   document.getElementById('article-desc').classList.add('hidden');
-  document.getElementById('article-title').textContent = 'no nibble today :(';
+  document.getElementById('article-title').textContent = message;
   document.getElementById('nibble-btn').style.display = 'none';
 }
 
@@ -504,72 +505,169 @@ function buildShortcutCircle(site) {
 }
 
 function renderShortcuts() {
-  chrome.topSites.get(sites => {
-    const row1 = document.getElementById('shortcuts-row-1');
-    const row2 = document.getElementById('shortcuts-row-2');
-    if (!row1 || !row2) return;
+  chrome.storage.local.get([STORAGE_KEY_CUSTOM_SHORTCUTS], result => {
+    const custom = result[STORAGE_KEY_CUSTOM_SHORTCUTS] || [];
+    chrome.topSites.get(sites => {
+      const row1 = document.getElementById('shortcuts-row-1');
+      const row2 = document.getElementById('shortcuts-row-2');
+      if (!row1 || !row2) return;
 
-    // Row 1: first 5
-    sites.slice(0, ROW1_COUNT).forEach(site => row1.appendChild(buildShortcutCircle(site)));
+      // Merge: custom first, then topSites deduplicated by URL
+      const customUrls = new Set(custom.map(c => c.url));
+      const merged = [
+        ...custom.map(c => ({ url: c.url, title: c.title })),
+        ...sites.filter(s => !customUrls.has(s.url)),
+      ];
 
-    // Row 2: next 2
-    const row2Sites = sites.slice(ROW1_COUNT, ROW1_COUNT + ROW2_COUNT);
-    const overflow  = sites.slice(ROW1_COUNT + ROW2_COUNT);
-    row2Sites.forEach(site => row2.appendChild(buildShortcutCircle(site)));
+      // Row 1: first 5
+      merged.slice(0, ROW1_COUNT).forEach(site => row1.appendChild(buildShortcutCircle(site)));
 
-    // "More" — toggles a popup with overflow shortcuts
-    if (overflow.length > 0) {
-      const more = document.createElement('button');
-      more.className = 'shortcut-item shortcut-more';
-      const mCircle = document.createElement('div');
-      mCircle.className = 'shortcut-circle';
-      mCircle.textContent = '···';
-      const mLabel = document.createElement('span');
-      mLabel.className = 'shortcut-label';
-      mLabel.textContent = 'more';
-      more.appendChild(mCircle);
-      more.appendChild(mLabel);
+      // Row 2: next 2
+      const row2Sites = merged.slice(ROW1_COUNT, ROW1_COUNT + ROW2_COUNT);
+      const overflow  = merged.slice(ROW1_COUNT + ROW2_COUNT);
+      row2Sites.forEach(site => row2.appendChild(buildShortcutCircle(site)));
 
-      // Build popup
-      const popup = document.createElement('div');
-      popup.id = 'more-popup';
+      // "More" — toggles a popup with overflow shortcuts
+      if (overflow.length > 0) {
+        const more = document.createElement('button');
+        more.className = 'shortcut-item shortcut-more';
+        const mCircle = document.createElement('div');
+        mCircle.className = 'shortcut-circle';
+        mCircle.textContent = '···';
+        const mLabel = document.createElement('span');
+        mLabel.className = 'shortcut-label';
+        mLabel.textContent = 'more';
+        more.appendChild(mCircle);
+        more.appendChild(mLabel);
 
-      const popupGrid = document.createElement('div');
-      popupGrid.id = 'more-popup-grid';
-      overflow.forEach(site => popupGrid.appendChild(buildShortcutCircle(site)));
+        // Build popup
+        const popup = document.createElement('div');
+        popup.id = 'more-popup';
 
-      popup.appendChild(popupGrid);
-      more.appendChild(popup);
+        const popupGrid = document.createElement('div');
+        popupGrid.id = 'more-popup-grid';
+        overflow.forEach(site => popupGrid.appendChild(buildShortcutCircle(site)));
 
-      more.onclick = (e) => {
-        e.stopPropagation();
-        const isOpen = more.classList.toggle('open');
-        popup.classList.toggle('open', isOpen);
-      };
+        popup.appendChild(popupGrid);
+        more.appendChild(popup);
 
-      // Close popup when clicking outside
-      document.addEventListener('click', () => {
-        more.classList.remove('open');
-        popup.classList.remove('open');
-      });
+        more.onclick = (e) => {
+          e.stopPropagation();
+          const isOpen = more.classList.toggle('open');
+          popup.classList.toggle('open', isOpen);
+        };
 
-      row2.appendChild(more);
-    }
+        // Close popup when clicking outside
+        document.addEventListener('click', () => {
+          more.classList.remove('open');
+          popup.classList.remove('open');
+        });
 
-    // "Add" — always last in row 2
-    const add = document.createElement('button');
-    add.className = 'shortcut-item shortcut-add';
-    const aCircle = document.createElement('div');
-    aCircle.className = 'shortcut-circle';
-    aCircle.textContent = '+';
-    const aLabel = document.createElement('span');
-    aLabel.className = 'shortcut-label';
-    aLabel.textContent = 'add';
-    add.appendChild(aCircle);
-    add.appendChild(aLabel);
-    row2.appendChild(add);
+        row2.appendChild(more);
+      }
+
+      // "Add" — always last in row 2
+      const add = document.createElement('button');
+      add.className = 'shortcut-item shortcut-add';
+      const aCircle = document.createElement('div');
+      aCircle.className = 'shortcut-circle';
+      aCircle.textContent = '+';
+      const aLabel = document.createElement('span');
+      aLabel.className = 'shortcut-label';
+      aLabel.textContent = 'add';
+      add.appendChild(aCircle);
+      add.appendChild(aLabel);
+      add.addEventListener('click', openAddShortcutModal);
+      row2.appendChild(add);
+    });
   });
 }
+
+
+// ─── Add Shortcut Modal ───────────────────────────────────────────────────────
+
+function openAddShortcutModal() {
+  const overlay   = document.getElementById('shortcut-modal-overlay');
+  const nameInput = document.getElementById('modal-name-input');
+  const urlInput  = document.getElementById('modal-url-input');
+  const errorEl   = document.getElementById('modal-error');
+
+  nameInput.value = '';
+  urlInput.value  = '';
+  errorEl.textContent = '';
+  overlay.classList.add('open');
+  nameInput.focus();
+}
+
+function closeAddShortcutModal() {
+  document.getElementById('shortcut-modal-overlay').classList.remove('open');
+}
+
+function isValidHttpUrl(str) {
+  try {
+    const u = new URL(str);
+    return u.protocol === 'http:' || u.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+async function saveCustomShortcut(title, url) {
+  const result  = await storageGet([STORAGE_KEY_CUSTOM_SHORTCUTS]);
+  const current = result[STORAGE_KEY_CUSTOM_SHORTCUTS] || [];
+  const entry   = { id: Date.now().toString(), title, url, addedAt: Date.now() };
+  await new Promise(resolve =>
+    chrome.storage.local.set({ [STORAGE_KEY_CUSTOM_SHORTCUTS]: [entry, ...current] }, resolve)
+  );
+}
+
+// Wire up modal once DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  const overlay   = document.getElementById('shortcut-modal-overlay');
+  const saveBtn   = document.getElementById('modal-save-btn');
+  const closeDot  = document.getElementById('modal-close-dot');
+  const nameInput = document.getElementById('modal-name-input');
+  const urlInput  = document.getElementById('modal-url-input');
+  const errorEl   = document.getElementById('modal-error');
+  const modal     = document.getElementById('shortcut-modal');
+
+  closeDot.addEventListener('click', closeAddShortcutModal);
+
+  // Close on outside click
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeAddShortcutModal();
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) {
+      closeAddShortcutModal();
+    }
+  });
+
+  // Stop clicks inside modal from bubbling to overlay
+  modal.addEventListener('click', (e) => e.stopPropagation());
+
+  saveBtn.addEventListener('click', async () => {
+    const title = nameInput.value.trim();
+    const url   = urlInput.value.trim();
+
+    errorEl.textContent = '';
+
+    if (!title) { errorEl.textContent = 'please enter a name.'; return; }
+    if (!isValidHttpUrl(url)) { errorEl.textContent = 'please enter a valid http/https url.'; return; }
+
+    await saveCustomShortcut(title, url);
+    closeAddShortcutModal();
+
+    // Re-render shortcuts with the new entry
+    const row1 = document.getElementById('shortcuts-row-1');
+    const row2 = document.getElementById('shortcuts-row-2');
+    row1.innerHTML = '';
+    row2.innerHTML = '';
+    renderShortcuts();
+  });
+});
 
 
 // ─── Recent tabs ──────────────────────────────────────────────────────────────

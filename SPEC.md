@@ -42,7 +42,7 @@ Filter out already-seen articles (localStorage)
     │
     ├─ Unseen articles exist? → Pick one randomly → Save as today's → Show
     │
-    ├─ All articles seen? → Reset seen list → Pick randomly from all → Show
+    ├─ All articles seen? → Show empty state: "all nibbled up! ✦ star more newsletters to see them here"
     │
     └─ No local articles at all?
             │
@@ -103,6 +103,7 @@ If a match is found and the href starts with `http`, that URL is used. Otherwise
 |---|---|---|
 | `chrome.storage.local` | `nibble_articles` | Full array of all fetched article objects |
 | `chrome.storage.local` | `nibble_current` | `{ id, date }` — today's selected article |
+| `chrome.storage.local` | `nibble_custom_shortcuts` | Array of user-added shortcuts: `{ id, title, url, addedAt }` |
 | `localStorage` | `nibble_seen` | Array of article IDs already shown on previous days |
 
 ---
@@ -185,7 +186,9 @@ The main article display — a white window-style card (510px wide) with:
 | Description | First 30 words of email body, 7px, muted, up to 370px wide |
 | Nibble button | Berry-colored pill button — opens article URL in new tab, marks as read |
 
-**Empty state:** If no newsletters are found, title shows "no nibble today :(" and the author pill, date, description, and button are all hidden.
+**Empty state:** The author pill, date, description, and button are all hidden. Two messages are possible:
+- `"no nibble today :("` — no newsletters found in Gmail at all
+- `"all nibbled up! ✦ star more newsletters to see them here"` — all fetched newsletters have already been shown; the seen list is **not** reset
 
 **Nibble button behavior:**
 - Opens `article.url` in a new tab
@@ -227,9 +230,17 @@ The main article display — a white window-style card (510px wide) with:
 - Label below: site title truncated to 10 characters, 9px font
 - Hover: 1px translate + reduced shadow
 
-**"More" button (lavender):** Appears when there are more than 7 top sites. Clicking toggles a popup showing overflow shortcuts in a wrapped grid. Closes on any outside click.
+**"More" button (lavender):** Appears when there are more than 7 top sites. Clicking toggles a popup showing overflow shortcuts in a horizontal grid of 4 columns. If there are more than 8 overflow shortcuts (2 rows of 4), the popup becomes vertically scrollable. Closes on any outside click.
 
-**"Add" button (yellow):** Always shown last in row 2. Currently renders the + button but has no click handler implemented — adding custom shortcuts is not yet functional.
+**"Add" button (yellow):** Always shown last in row 2. Clicking opens the `add.shortcut` modal (see below). Custom shortcuts are saved to `chrome.storage.local` under `nibble_custom_shortcuts` as an array of `{ id, title, url, addedAt }`. They are merged with `topSites` results in the shortcuts row — custom shortcuts appear first, deduplicated by URL.
+
+**`add.shortcut` modal:**
+- Matches the OS-window aesthetic: berry border, pink title bar, traffic-light dots, Press Start 2P font
+- Soft drop shadow: `0 8px 32px rgba(196, 82, 122, 0.18)`
+- Fields: **name** (label 9px) and **url** (label 9px), input text 10px
+- Validates that the URL is a valid `http`/`https` URL before saving; shows an inline error if not
+- Closes on: red dot click, outside click (overlay), or Escape key
+- On save, the shortcuts row re-renders immediately without a page reload
 
 ### 7. Kawaii Characters
 Six floating kawaii characters positioned around the left and right edges of the screen. They are purely decorative (`pointer-events: none`).
@@ -338,7 +349,6 @@ nibble/
 | Feature | Status |
 |---|---|
 | Bloom garden changes daily | Not implemented — flowers are static (same 6 colors every day) |
-| "Add" shortcut button | Renders but has no click handler; custom shortcuts not supported |
 | `char_shoe.png` and `char_workout.png` | Assets exist but not placed on screen |
 | Article refresh / manual re-fetch | No way for user to force a new fetch without clearing storage |
 | Seen-list persistence across browser profiles | `localStorage` is tab-page local; won't sync across devices |

@@ -350,12 +350,13 @@ body {
 }
 #more-popup.open { display: block; }
 #more-popup-grid {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 32px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px 24px;
   padding: 16px 18px;
-  justify-content: center;
+  justify-items: center;
+  max-height: calc(2 * (52px + 18px + 20px));
+  overflow-y: auto;
 }
 
 /* "Add" circle — yellow */
@@ -400,6 +401,89 @@ body {
 @keyframes float  { 0%,100%{transform:translateY(0)}         50%{transform:translateY(-7px)} }
 @keyframes float2 { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-5px) rotate(2deg)} }
 @keyframes float3 { 0%,100%{transform:translateY(0) rotate(1deg)}  50%{transform:translateY(-6px) rotate(-1deg)} }
+
+/* ═══════════════════════════════════════════════
+   ADD SHORTCUT MODAL
+   ═══════════════════════════════════════════════ */
+#shortcut-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(196,82,122,.18);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+#shortcut-modal-overlay.open { display: flex; }
+
+#shortcut-modal {
+  width: 340px;
+  background: #fff;
+  border: 2.5px solid var(--berry);
+  box-shadow: 0 8px 32px rgba(196, 82, 122, 0.18);
+  border-radius: 14px;
+  overflow: hidden;
+  font-family: 'Press Start 2P', monospace;
+}
+#shortcut-modal .titlebar { background: var(--pink); }
+#shortcut-modal .win-title { color: var(--berry-dark); }
+
+#shortcut-modal-body {
+  padding: 24px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.modal-field label {
+  font-size: 9px;
+  color: var(--berry);
+  letter-spacing: .5px;
+}
+.modal-field input {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: var(--text-dark);
+  border: 2px solid var(--pink);
+  border-radius: 8px;
+  padding: 10px 12px;
+  outline: none;
+  background: var(--blush);
+  transition: border-color .15s;
+}
+.modal-field input:focus { border-color: var(--berry); }
+
+#modal-error {
+  font-size: 7px;
+  color: #FF6B6B;
+  min-height: 12px;
+  letter-spacing: .3px;
+}
+
+#modal-save-btn {
+  background: var(--berry);
+  color: #fff;
+  border: 2.5px solid var(--berry-dark);
+  box-shadow: 4px 4px 0 var(--berry-dark);
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  align-self: center;
+  margin-top: 4px;
+  transition: transform .1s, box-shadow .1s;
+}
+#modal-save-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--berry-dark);
+}
 </style>
 </head>
 <body>
@@ -634,6 +718,30 @@ body {
     <div id="shortcuts-row-2"></div>
   </div>
 
+</div>
+
+<!-- ══ ADD SHORTCUT MODAL ══ -->
+<div id="shortcut-modal-overlay">
+  <div id="shortcut-modal" class="win" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="titlebar">
+      <div class="dot dot-r" id="modal-close-dot" style="cursor:pointer"></div>
+      <div class="dot dot-y"></div>
+      <div class="dot dot-g"></div>
+      <span class="win-title" id="modal-title">add.shortcut</span>
+    </div>
+    <div id="shortcut-modal-body">
+      <div class="modal-field">
+        <label for="modal-name-input">name</label>
+        <input id="modal-name-input" type="text" placeholder="e.g. GitHub" maxlength="40" autocomplete="off">
+      </div>
+      <div class="modal-field">
+        <label for="modal-url-input">url</label>
+        <input id="modal-url-input" type="url" placeholder="https://..." maxlength="500" autocomplete="off">
+      </div>
+      <div id="modal-error"></div>
+      <button id="modal-save-btn">save</button>
+    </div>
+  </div>
 </div>
 
 <script src="newtab.js"></script>
