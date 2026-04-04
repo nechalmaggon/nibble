@@ -53,15 +53,28 @@ const BLOOM_COLORS = [
 
 // ─── Theme ────────────────────────────────────────────────────────────────────
 
-function applyTheme(theme) {
-  if (theme === 'default') {
+async function applyTheme(theme) {
+  const themeKey = theme || 'default';
+
+  if (themeKey === 'default') {
     delete document.body.dataset.theme;
   } else {
-    document.body.dataset.theme = theme;
+    document.body.dataset.theme = themeKey;
   }
+
   document.querySelectorAll('.theme-row').forEach(row => {
-    row.classList.toggle('active', row.dataset.themeKey === theme);
+    row.classList.toggle('active', row.dataset.themeKey === themeKey);
   });
+
+  try {
+    const res = await fetch(chrome.runtime.getURL(`assets/deco/${themeKey}.svg`));
+    if (!res.ok) return;
+    const svgText = await res.text();
+    const decoLayer = document.getElementById('deco-layer');
+    if (decoLayer && svgText) {
+      decoLayer.outerHTML = svgText;
+    }
+  } catch {}
 }
 
 function initThemeSwitcher(currentTheme) {
@@ -80,9 +93,9 @@ function initThemeSwitcher(currentTheme) {
   });
 
   document.querySelectorAll('.theme-row').forEach(row => {
-    row.addEventListener('click', () => {
+    row.addEventListener('click', async () => {
       const key = row.dataset.themeKey;
-      applyTheme(key);
+      await applyTheme(key);
       storageSet({ nibble_theme: key });
       panel.classList.remove('open');
     });
@@ -97,7 +110,7 @@ function initThemeSwitcher(currentTheme) {
   // Load theme from storage (no-op if unset; :root defaults apply)
   const themeResult = await storageGet(['nibble_theme']);
   const savedTheme  = themeResult.nibble_theme || 'default';
-  applyTheme(savedTheme);
+  await applyTheme(savedTheme);
   initThemeSwitcher(savedTheme);
 
   setCookieMascot();

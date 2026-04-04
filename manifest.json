@@ -16,6 +16,16 @@
   "host_permissions": [
     "https://www.googleapis.com/*"
   ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/deco/*.svg"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
   "oauth2": {
     "client_id": "149091077220-fjfe97pher3520kkt4b734do60bhqise.apps.googleusercontent.com",
     "scopes": [
