@@ -104,7 +104,7 @@ If a match is found and the href starts with `http`, that URL is used. Otherwise
 | `chrome.storage.local` | `nibble_articles` | Full array of all fetched article objects |
 | `chrome.storage.local` | `nibble_current` | `{ id, date }` — today's selected article |
 | `chrome.storage.local` | `nibble_custom_shortcuts` | Array of user-added shortcuts: `{ id, title, url, addedAt }` |
-| `chrome.storage.local` | `nibble_theme` | Active theme key (`"default"` or `"matcha"`); absent = default |
+| `chrome.storage.local` | `nibble_theme` | Active theme key (`"default"`, `"matcha"`, or `"oceandrift"`); absent = default |
 | `localStorage` | `nibble_seen` | Array of article IDs already shown on previous days |
 
 ---
@@ -271,6 +271,7 @@ Each row contains a swatch cluster (3 × 12px circles with slight overlap), the 
 |---|---|---|
 | `default` | cherry blossom | `#FFF8FA`, `#FFB6C1`, `#C4527A` |
 | `matcha` | matcha | `#F4FAF6`, `#A8C5A0`, `#3D6B4F` |
+| `oceandrift` | ocean drift | `#EDF6F9`, `#83C5BE`, `#006D77` |
 
 **Theme application:**
 - Themes are implemented as CSS `[data-theme="key"]` overrides on `<body>` that re-define all design tokens. The `default` theme removes the `data-theme` attribute entirely so the `:root` defaults apply.
@@ -325,6 +326,15 @@ The decoration layer is loaded dynamically per theme from standalone SVG files i
 - Leaf clusters deepened (`#6BAF8A`, `#3D6B4F`)
 - Plus signs recoloured (`#A8C5A0`, `#8ABF94`)
 
+`assets/deco/oceandrift.svg` keeps the same fixed full-screen structure and comparable visual density/spread, with coastal reskin motifs:
+- Coral/anemone-style bloom clusters in mixed cool + warm tones (`#83C5BE`, `#CDECEC`, `#FFDDD2`, `#E29578`)
+- Bubble-cluster shimmer marks replacing sparkle paths (still edge-distributed at similar positions)
+- Pale aqua/teal star outlines retained (`#CDECEC`, `#83C5BE`, `#DDF3F1`)
+- Shell-like outline motifs replacing hearts (`#E29578`, `#FFDDD2`, `#8C5B4D`)
+- Loose dots recoloured to ocean + shell accents (`#83C5BE`, `#5E7B80`, `#006D77`, `#E29578`)
+- Soft rounded seaweed frond clusters at the lower corners (`#83C5BE`, `#67B5AE`, `#CDECEC`)
+- Plus signs retained and recoloured to teal/aqua (`#83C5BE`, `#CDECEC`, `#006D77`)
+
 ---
 
 ## Design System
@@ -336,6 +346,7 @@ All colours are defined as CSS custom properties on `:root`. Theme overrides are
 **Theme keys:**
 - `default` — no `data-theme` attribute; `:root` values apply (cherry blossom palette)
 - `matcha` — `data-theme="matcha"` on `<body>`
+- `oceandrift` — `data-theme="oceandrift"` on `<body>`
 
 ### Colors (CSS Custom Properties)
 
@@ -407,6 +418,39 @@ All colours are defined as CSS custom properties on `:root`. Theme overrides are
 | `--add-btn-color` | `#3D6B4F` |
 | Shadow tokens | Adjusted to `rgba(61,107,79,…)` equivalents |
 
+**Ocean Drift theme overrides (`[data-theme="oceandrift"]`):**
+
+| Token | Ocean Drift value |
+|---|---|
+| `--page-bg` | `#EDF6F9` |
+| `--page-grid-color` | `rgba(131, 197, 190, 0.20)` |
+| `--accent` | `#006D77` |
+| `--accent-dark` | `#004F57` |
+| `--surface-bg` | `#FCFEFF` |
+| `--text-primary` | `#1F3A40` |
+| `--heading-color` | `#006D77` |
+| `--article-date-color` | `#5E7B80` |
+| `--article-desc-color` | `#6E8B90` |
+| `--titlebar-bg` | `#83C5BE` |
+| `--soft-border` | `#67B5AE` |
+| `--popup-border` | `#CDECEC` |
+| `--tabs-bg` | `#FFF4EF` |
+| `--tabs-accent` | `#FFDDD2` |
+| `--tabs-text` | `#8C5B4D` |
+| `--tab-hover-bg` | `rgba(226, 149, 120, 0.18)` |
+| `--blooms-bg` | `#F3FCFC` |
+| `--blooms-border` | `#83C5BE` |
+| `--blooms-titlebar-bg` | `#CDECEC` |
+| `--blooms-text` | `#006D77` |
+| `--more-btn-bg` | `#DDF3F1` |
+| `--more-btn-border` | `#83C5BE` |
+| `--more-btn-color` | `#006D77` |
+| `--add-btn-bg` | `#FFF1EC` |
+| `--add-btn-border` | `#E29578` |
+| `--add-btn-color` | `#8C5B4D` |
+| `--grid-size` | `40px` |
+| Shadow tokens | Adjusted to `rgba(0,109,119,…)` equivalents |
+
 ### Typography
 - **Font:** Press Start 2P (Google Fonts) — a pixel/retro monospace font used throughout
 - **Sizes in use:** 5.5px, 7px, 8px, 9px, 10px, 13px, 14px, 20px
@@ -454,7 +498,8 @@ nibble/
     │   └── char_workout.png      ✗ not used
     └── deco/              Theme decoration SVG layers
         ├── default.svg    Cherry blossom decoration layer
-        └── matcha.svg     Matcha decoration layer
+        ├── matcha.svg     Matcha decoration layer
+        └── oceandrift.svg Ocean Drift decoration layer
 ```
 
 ---
@@ -467,4 +512,4 @@ nibble/
 | `char_shoe.png` and `char_workout.png` | Assets exist but not placed on screen |
 | Article refresh / manual re-fetch | No way for user to force a new fetch without clearing storage |
 | Seen-list persistence across browser profiles | `localStorage` is tab-page local; won't sync across devices |
-| Additional themes | Only two themes exist (cherry blossom, matcha); picker is built to support more rows |
+| Additional themes | Three themes currently exist (cherry blossom, matcha, ocean drift); picker supports more rows |
