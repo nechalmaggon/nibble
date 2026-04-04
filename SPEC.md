@@ -1,7 +1,7 @@
 # Nibble — Product Specification
 
-**Version:** 1.1
-**Last updated:** 2026-04-03
+**Version:** 1.2
+**Last updated:** 2026-04-04
 
 ---
 
@@ -120,6 +120,7 @@ If a match is found and the href starts with `http`, that URL is used. Otherwise
   - `sessions` — Recently closed tabs for the Tabs panel
   - `tabs` — Tab access
 - **Host permissions:** `https://www.googleapis.com/*` — Gmail API calls
+- **Web accessible resources:** `assets/deco/*.svg` (matched on `<all_urls>`) so `newtab.js` can fetch theme decoration SVGs
 
 ---
 
@@ -275,6 +276,8 @@ Each row contains a swatch cluster (3 × 12px circles with slight overlap), the 
 - Themes are implemented as CSS `[data-theme="key"]` overrides on `<body>` that re-define all design tokens. The `default` theme removes the `data-theme` attribute entirely so the `:root` defaults apply.
 - The selected theme is saved to `chrome.storage.local` under `nibble_theme` and restored on every page load.
 - All UI components use `var()` tokens throughout, so they re-skin automatically when the theme changes.
+- The decoration layer is also theme-swapped in `applyTheme(theme)`: it fetches `assets/deco/${themeKey}.svg` (`themeKey = "default"` when unset) and replaces `#deco-layer` via `outerHTML`.
+- Decoration fetch failures are intentionally silent; if a file fails to load, the current decoration layer remains in place.
 
 ### 8. Kawaii Characters
 Six floating kawaii characters positioned around the left and right edges of the screen. They are purely decorative (`pointer-events: none`).
@@ -296,7 +299,13 @@ Six floating kawaii characters positioned around the left and right edges of the
 Note: A 7th character asset (`char_shoe.png`) and an 8th (`char_workout.png`) exist in the assets folder but are not used in the current layout.
 
 ### 9. Decoration Layer
-An SVG layer (`z-index: 3`) fills the entire background with scattered decorative elements:
+The decoration layer is loaded dynamically per theme from standalone SVG files in `assets/deco/`.
+
+- `newtab.html` contains an empty placeholder: `<div id="deco-layer"></div>`
+- On init, `applyTheme(savedTheme)` runs after reading `nibble_theme`, so the correct decoration SVG is injected immediately on every new tab open.
+- Each SVG uses `id="deco-layer"`, `position: fixed`, `width="100%"`, `height="100%"`, `pointer-events: none`, and `z-index: 3`.
+
+`assets/deco/default.svg` (cherry blossom) contains:
 - **Flowers** (circle-petal style): 6 variations in pink/blush at various corners
 - **Four-petal flowers** (ellipse style): 2 variations in pink/blush on left and right edges
 - **Sparkle stars** (8-pointed path): 8 variations across the page
@@ -305,6 +314,16 @@ An SVG layer (`z-index: 3`) fills the entire background with scattered decorativ
 - **Loose dots**: 7 small circles in pink/lavender/berry
 - **Leaf clusters** (ellipse groups): 2 in mint green at bottom corners
 - **Plus signs**: 4 small crosses in pink/lavender
+
+`assets/deco/matcha.svg` keeps the same element count, positions, and spread, but is reskinned:
+- Flowers recoloured to sage tones (`#A8C5A0`, `#C8DFC4`)
+- Four-petal flowers recoloured (`#8ABF94`, `#C8DFC4`)
+- Sparkle stars recoloured (`#3D6B4F`, `#A8C5A0`)
+- 5-pointed star outlines recoloured (`#A8C5A0`, `#6BAF8A`)
+- Heart outlines replaced with simple leaf-outline paths (`#3D6B4F`, `#6BAF8A`)
+- Loose dots recoloured (`#A8C5A0`, `#6BAF8A`, `#3D6B4F`)
+- Leaf clusters deepened (`#6BAF8A`, `#3D6B4F`)
+- Plus signs recoloured (`#A8C5A0`, `#8ABF94`)
 
 ---
 
@@ -424,15 +443,18 @@ nibble/
     │   ├── cookie_cup.png
     │   ├── cookie_strawberry.png
     │   └── cookie_heart.png
-    └── characters/        Kawaii characters (8 files, 6 in use)
-        ├── char_cloudclock.png   ✓ used
-        ├── char_plantpot.png     ✓ used
-        ├── char_moon.png         ✓ used
-        ├── char_blob.png         ✓ used
-        ├── char_notebook.png     ✓ used
-        ├── char_toast.png        ✓ used
-        ├── char_shoe.png         ✗ not used
-        └── char_workout.png      ✗ not used
+    ├── characters/        Kawaii characters (8 files, 6 in use)
+    │   ├── char_cloudclock.png   ✓ used
+    │   ├── char_plantpot.png     ✓ used
+    │   ├── char_moon.png         ✓ used
+    │   ├── char_blob.png         ✓ used
+    │   ├── char_notebook.png     ✓ used
+    │   ├── char_toast.png        ✓ used
+    │   ├── char_shoe.png         ✗ not used
+    │   └── char_workout.png      ✗ not used
+    └── deco/              Theme decoration SVG layers
+        ├── default.svg    Cherry blossom decoration layer
+        └── matcha.svg     Matcha decoration layer
 ```
 
 ---
