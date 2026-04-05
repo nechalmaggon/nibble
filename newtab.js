@@ -59,7 +59,7 @@ async function applyTheme(theme) {
   if (themeKey === 'default') {
     delete document.body.dataset.theme;
   } else {
-    document.body.dataset.theme = themeKey;
+    document.body.setAttribute('data-theme', themeKey);
   }
 
   document.querySelectorAll('.theme-row').forEach(row => {

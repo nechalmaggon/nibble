@@ -1,7 +1,7 @@
 # Nibble — Product Specification
 
-**Version:** 1.2
-**Last updated:** 2026-04-04
+**Version:** 1.3
+**Last updated:** 2026-04-05
 
 ---
 
@@ -104,7 +104,7 @@ If a match is found and the href starts with `http`, that URL is used. Otherwise
 | `chrome.storage.local` | `nibble_articles` | Full array of all fetched article objects |
 | `chrome.storage.local` | `nibble_current` | `{ id, date }` — today's selected article |
 | `chrome.storage.local` | `nibble_custom_shortcuts` | Array of user-added shortcuts: `{ id, title, url, addedAt }` |
-| `chrome.storage.local` | `nibble_theme` | Active theme key (`"default"`, `"matcha"`, or `"oceandrift"`); absent = default |
+| `chrome.storage.local` | `nibble_theme` | Active theme key (`"default"`, `"matcha"`, `"oceandrift"`, or `"inkrose"`); absent = default |
 | `localStorage` | `nibble_seen` | Array of article IDs already shown on previous days |
 
 ---
@@ -272,6 +272,7 @@ Each row contains a swatch cluster (3 × 12px circles with slight overlap), the 
 | `default` | cherry blossom | `#FFF8FA`, `#FFB6C1`, `#C4527A` |
 | `matcha` | matcha | `#F4FAF6`, `#A8C5A0`, `#3D6B4F` |
 | `oceandrift` | ocean drift | `#EDF6F9`, `#83C5BE`, `#006D77` |
+| `inkrose` | ink & rose | `#1C1014`, `#8B3A56`, `#E8759A` |
 
 **Theme application:**
 - Themes are implemented as CSS `[data-theme="key"]` overrides on `<body>` that re-define all design tokens. The `default` theme removes the `data-theme` attribute entirely so the `:root` defaults apply.
@@ -335,6 +336,15 @@ The decoration layer is loaded dynamically per theme from standalone SVG files i
 - Soft rounded seaweed frond clusters at the lower corners (`#83C5BE`, `#67B5AE`, `#CDECEC`)
 - Plus signs retained and recoloured to teal/aqua (`#83C5BE`, `#CDECEC`, `#006D77`)
 
+`assets/deco/inkrose.svg` keeps the same element count, positions, and spread as `default.svg`, but is reskinned:
+- Flowers recoloured to rose/mauve/blush (`#8B3A56`, `#A0728B`, `#D8A8B8`)
+- Sparkles recoloured (`#E8759A`, `#D8A8B8`)
+- 5-pointed star outlines recoloured (`#A0728B`, `#8B3A56`)
+- Heart outlines recoloured (`#E8759A`, `#8B3A56`)
+- Loose dots recoloured with rose/plum tones (`#8B3A56`, `#A0728B`, `#D8A8B8`, `#E8759A`, `#24161B`)
+- Leaf clusters deepened (`#355E4D`, `#24161B`)
+- Plus signs recoloured (`#8B3A56`, `#A0728B`)
+
 ---
 
 ## Design System
@@ -347,6 +357,7 @@ All colours are defined as CSS custom properties on `:root`. Theme overrides are
 - `default` — no `data-theme` attribute; `:root` values apply (cherry blossom palette)
 - `matcha` — `data-theme="matcha"` on `<body>`
 - `oceandrift` — `data-theme="oceandrift"` on `<body>`
+- `inkrose` — `data-theme="inkrose"` on `<body>`
 
 ### Colors (CSS Custom Properties)
 
@@ -386,6 +397,38 @@ All colours are defined as CSS custom properties on `:root`. Theme overrides are
 | `--add-btn-border` | `#E2D075` | "Add" shortcut button border |
 | `--add-btn-color` | `#7a6520` | "Add" shortcut button text |
 | `--grid-size` | `40px` | Background grid spacing |
+
+**Ink & Rose theme overrides (`[data-theme="inkrose"]`):**
+
+| Token | Ink & Rose value |
+|---|---|
+| `--page-bg` | `#1C1014` |
+| `--page-grid-color` | `rgba(232, 117, 154, 0.12)` |
+| `--accent` | `#E8759A` |
+| `--accent-dark` | `#5A2034` |
+| `--surface-bg` | `#2B1B22` |
+| `--text-primary` | `#F5E6EC` |
+| `--heading-color` | `#E8759A` |
+| `--article-date-color` | `#C89AAA` |
+| `--article-desc-color` | `#B88A9B` |
+| `--titlebar-bg` | `#8B3A56` |
+| `--soft-border` | `#8B3A56` |
+| `--popup-border` | `#B76883` |
+| `--tabs-bg` | `#332028` |
+| `--tabs-accent` | `#A55B75` |
+| `--tabs-text` | `#F2D9E2` |
+| `--tab-hover-bg` | `rgba(232, 117, 154, 0.16)` |
+| `--blooms-bg` | `#38242C` |
+| `--blooms-border` | `#C27A95` |
+| `--blooms-titlebar-bg` | `#A55B75` |
+| `--blooms-text` | `#F7E7ED` |
+| `--more-btn-bg` | `#3A2530` |
+| `--more-btn-border` | `#A0728B` |
+| `--more-btn-color` | `#F0D8E2` |
+| `--add-btn-bg` | `#472A35` |
+| `--add-btn-border` | `#D07A9A` |
+| `--add-btn-color` | `#FFE9F1` |
+| Shadow tokens | `--mascot-shadow`, `--card-ambient-shadow`, `--modal-overlay-bg`, `--popup-shadow`, and `--char-shadow` are dark rose/plum variants |
 
 **Matcha theme overrides (`[data-theme="matcha"]`):**
 
@@ -498,6 +541,7 @@ nibble/
     │   └── char_workout.png      ✗ not used
     └── deco/              Theme decoration SVG layers
         ├── default.svg    Cherry blossom decoration layer
+        ├── inkrose.svg    Ink & Rose decoration layer
         ├── matcha.svg     Matcha decoration layer
         └── oceandrift.svg Ocean Drift decoration layer
 ```
@@ -512,4 +556,4 @@ nibble/
 | `char_shoe.png` and `char_workout.png` | Assets exist but not placed on screen |
 | Article refresh / manual re-fetch | No way for user to force a new fetch without clearing storage |
 | Seen-list persistence across browser profiles | `localStorage` is tab-page local; won't sync across devices |
-| Additional themes | Three themes currently exist (cherry blossom, matcha, ocean drift); picker supports more rows |
+| Additional themes | Four themes currently exist (cherry blossom, matcha, ocean drift, ink & rose); picker supports more rows |
