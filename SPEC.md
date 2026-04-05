@@ -1,6 +1,6 @@
 # Nibble — Product Specification
 
-**Version:** 1.3
+**Version:** 1.4
 **Last updated:** 2026-04-05
 
 ---
@@ -40,7 +40,12 @@ Load local article store (chrome.storage.local)
     ▼
 Filter out already-seen articles (localStorage)
     │
-    ├─ Unseen articles exist? → Pick one randomly → Save as today's → Show
+    ├─ Unseen articles exist?
+    │     ├─ Tier 1: Author not shown in last 4 days → Pick randomly
+    │     ├─ Tier 2: Author not shown yesterday     → Pick randomly
+    │     └─ Tier 3: Any unseen article             → Pick randomly
+    │
+    │   Save as today's, add to seen list, append author history → Show
     │
     ├─ All articles seen? → Show empty state: "all nibbled up! ✦ star more newsletters to see them here"
     │
@@ -53,10 +58,19 @@ Filter out already-seen articles (localStorage)
         Filter to newsletters only (see: Newsletter Filter)
         Stop once 5 valid newsletters found
             │
-            ├─ Found some → Merge into local store → Pick one randomly → Show
+            ├─ Found some → Merge into local store → Apply same 3-tier author cooldown pick → Show
             │
             └─ Found none → Show empty state ("no nibble today :(")
 ```
+
+### Author Cooldown Rules
+
+- Daily picks use local dates (`YYYY-MM-DD`).
+- Authors are normalized for matching (`trim + lowercase`; missing = `"unknown"`).
+- Tier 1 blocks authors shown on each of the last 4 calendar days (yesterday through 4 days ago).
+- If Tier 1 has no candidates, Tier 2 blocks only authors shown yesterday.
+- If Tier 2 also has no candidates, Tier 3 allows any unseen article.
+- A history entry is appended only when a new day's article is selected (not when reloading the same day's card), and history is trimmed to the most recent 30 entries.
 
 ### Newsletter Filter
 
@@ -103,8 +117,9 @@ If a match is found and the href starts with `http`, that URL is used. Otherwise
 |---|---|---|
 | `chrome.storage.local` | `nibble_articles` | Full array of all fetched article objects |
 | `chrome.storage.local` | `nibble_current` | `{ id, date }` — today's selected article |
+| `chrome.storage.local` | `nibble_history` | Last 30 daily picks: `{ articleId, author, date }` (local `YYYY-MM-DD`) |
 | `chrome.storage.local` | `nibble_custom_shortcuts` | Array of user-added shortcuts: `{ id, title, url, addedAt }` |
-| `chrome.storage.local` | `nibble_theme` | Active theme key (`"default"`, `"matcha"`, `"oceandrift"`, or `"inkrose"`); absent = default |
+| `chrome.storage.local` | `nibble_theme` | Active theme key (`"default"`, `"matcha"`, `"oceandrift"`, `"inkrose"`, or `"oatlatte"`); absent = default |
 | `localStorage` | `nibble_seen` | Array of article IDs already shown on previous days |
 
 ---
@@ -273,6 +288,7 @@ Each row contains a swatch cluster (3 × 12px circles with slight overlap), the 
 | `matcha` | matcha | `#F4FAF6`, `#A8C5A0`, `#3D6B4F` |
 | `oceandrift` | ocean drift | `#EDF6F9`, `#83C5BE`, `#006D77` |
 | `inkrose` | ink & rose | `#1C1014`, `#8B3A56`, `#E8759A` |
+| `oatlatte` | oat latte | `#FBF7F1`, `#E8D6C3`, `#8B5E3C` |
 
 **Theme application:**
 - Themes are implemented as CSS `[data-theme="key"]` overrides on `<body>` that re-define all design tokens. The `default` theme removes the `data-theme` attribute entirely so the `:root` defaults apply.
@@ -345,6 +361,15 @@ The decoration layer is loaded dynamically per theme from standalone SVG files i
 - Leaf clusters deepened (`#355E4D`, `#24161B`)
 - Plus signs recoloured (`#8B3A56`, `#A0728B`)
 
+`assets/deco/oatlatte.svg` keeps the same element count, motif types, positions, and spread as `default.svg`, but is reskinned:
+- Flowers recoloured to cream/biscuit/oat tones (`#E8D6C3`, `#F2E4C8`, `#CDB9A3`)
+- Sparkles recoloured to cocoa/tan (`#8B5E3C`, `#6B4D36`, `#D8C0A7`)
+- 5-pointed star outlines recoloured (`#CDB9A3`, `#D8C0A7`, `#E8D6C3`)
+- Heart outlines recoloured (`#8B5E3C`, `#6B4D36`, `#CDB9A3`)
+- Loose dots recoloured with warm neutrals + muted sage (`#FFF8EE`, `#F2E4C8`, `#8B5E3C`, `#A9C3A6`)
+- Leaf clusters recoloured to soft sage (`#A9C3A6`, `#DDECDD`)
+- Plus signs recoloured (`#D8C0A7`, `#CDB9A3`, `#8B5E3C`)
+
 ---
 
 ## Design System
@@ -358,6 +383,7 @@ All colours are defined as CSS custom properties on `:root`. Theme overrides are
 - `matcha` — `data-theme="matcha"` on `<body>`
 - `oceandrift` — `data-theme="oceandrift"` on `<body>`
 - `inkrose` — `data-theme="inkrose"` on `<body>`
+- `oatlatte` — `data-theme="oatlatte"` on `<body>`
 
 ### Colors (CSS Custom Properties)
 
@@ -543,6 +569,7 @@ nibble/
         ├── default.svg    Cherry blossom decoration layer
         ├── inkrose.svg    Ink & Rose decoration layer
         ├── matcha.svg     Matcha decoration layer
+        ├── oatlatte.svg   Oat Latte decoration layer
         └── oceandrift.svg Ocean Drift decoration layer
 ```
 
@@ -556,4 +583,4 @@ nibble/
 | `char_shoe.png` and `char_workout.png` | Assets exist but not placed on screen |
 | Article refresh / manual re-fetch | No way for user to force a new fetch without clearing storage |
 | Seen-list persistence across browser profiles | `localStorage` is tab-page local; won't sync across devices |
-| Additional themes | Four themes currently exist (cherry blossom, matcha, ocean drift, ink & rose); picker supports more rows |
+| Additional themes | Five themes currently exist (cherry blossom, matcha, ocean drift, ink & rose, oat latte); picker supports more rows |

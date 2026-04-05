@@ -3,6 +3,7 @@
 const STORAGE_KEY_ARTICLES        = 'nibble_articles';
 const STORAGE_KEY_CURRENT         = 'nibble_current';
 const STORAGE_KEY_SEEN            = 'nibble_seen';
+const STORAGE_KEY_HISTORY         = 'nibble_history';
 const STORAGE_KEY_CUSTOM_SHORTCUTS = 'nibble_custom_shortcuts';
 
 const GMAIL_SEARCH_URL =
@@ -119,10 +120,11 @@ function initThemeSwitcher(currentTheme) {
   renderRecentTabs();
 
   try {
-    const today   = getToday();
-    const storage = await storageGet([STORAGE_KEY_ARTICLES, STORAGE_KEY_CURRENT]);
+    const today   = getLocalDateString();
+    const storage = await storageGet([STORAGE_KEY_ARTICLES, STORAGE_KEY_CURRENT, STORAGE_KEY_HISTORY]);
     let articles  = storage[STORAGE_KEY_ARTICLES] || [];
     let current   = storage[STORAGE_KEY_CURRENT]  || null;
+    let history   = storage[STORAGE_KEY_HISTORY]  || [];
 
     // Reuse today's pick if it's still current
     if (current && current.date === today) {
@@ -134,7 +136,7 @@ function initThemeSwitcher(currentTheme) {
     }
 
     // Need a fresh pick — try from existing articles first
-    let seen     = loadSeen(articles);
+    let seen     = loadSeen();
     let unseen   = articles.filter(a => !seen.includes(a.id));
 
     if (unseen.length === 0 && articles.length > 0) {
@@ -144,9 +146,11 @@ function initThemeSwitcher(currentTheme) {
     }
 
     if (unseen.length > 0) {
-      const picked = unseen[Math.floor(Math.random() * unseen.length)];
+      const picked = selectArticleForToday(articles, history);
       await saveCurrent(picked.id, today);
       addToSeen(picked.id);
+      history = appendToHistory(history, picked, today);
+      await storageSet({ [STORAGE_KEY_HISTORY]: history });
       renderArticle(picked, articles);
       return;
     }
@@ -166,10 +170,16 @@ function initThemeSwitcher(currentTheme) {
     articles = [...articles, ...newArticles];
     await storageSet({ [STORAGE_KEY_ARTICLES]: articles });
 
-    // Pick one from what we just fetched
-    const picked = fetched[Math.floor(Math.random() * fetched.length)];
+    // Pick one using author cooldown tiers
+    const picked = selectArticleForToday(articles, history);
+    if (!picked) {
+      renderEmpty('all nibbled up! ✦ star more newsletters to see them here');
+      return;
+    }
     await saveCurrent(picked.id, today);
     addToSeen(picked.id);
+    history = appendToHistory(history, picked, today);
+    await storageSet({ [STORAGE_KEY_HISTORY]: history });
     renderArticle(picked, articles);
 
   } catch (err) {
@@ -181,8 +191,87 @@ function initThemeSwitcher(currentTheme) {
 
 // ─── Date ─────────────────────────────────────────────────────────────────────
 
-function getToday() {
-  return new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+function getLocalDateString(date = new Date()) {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function normalizeAuthor(author) {
+  return String(author || 'unknown').trim().toLowerCase();
+}
+
+function getRecentAuthorSets(history, today = new Date()) {
+  const normalizedHistory = Array.isArray(history) ? history : [];
+  const base = new Date(today);
+  base.setHours(0, 0, 0, 0);
+
+  const last4Dates = new Set();
+  for (let i = 1; i <= 4; i += 1) {
+    const day = new Date(base);
+    day.setDate(base.getDate() - i);
+    last4Dates.add(getLocalDateString(day));
+  }
+
+  const yesterday = new Date(base);
+  yesterday.setDate(base.getDate() - 1);
+  const yesterdayDate = getLocalDateString(yesterday);
+
+  const last4DayAuthors = new Set();
+  const yesterdayAuthors = new Set();
+
+  for (const entry of normalizedHistory) {
+    if (!entry || !entry.date) continue;
+    const author = normalizeAuthor(entry.author);
+    if (last4Dates.has(entry.date)) last4DayAuthors.add(author);
+    if (entry.date === yesterdayDate) yesterdayAuthors.add(author);
+  }
+
+  return { last4DayAuthors, yesterdayAuthors };
+}
+
+function appendToHistory(history, article, dateStr) {
+  const nextHistory = Array.isArray(history) ? [...history] : [];
+  if (!article?.id || !dateStr) return nextHistory.slice(-30);
+
+  const exists = nextHistory.some(
+    entry => entry && entry.date === dateStr && entry.articleId === article.id
+  );
+  if (exists) return nextHistory.slice(-30);
+
+  const withoutSameDay = nextHistory.filter(entry => entry?.date !== dateStr);
+  withoutSameDay.push({
+    articleId: article.id,
+    author: article.author || 'unknown',
+    date: dateStr
+  });
+
+  return withoutSameDay.slice(-30);
+}
+
+function selectArticleForToday(articles, history, today = new Date()) {
+  const seen = loadSeen();
+  const unseen = (Array.isArray(articles) ? articles : []).filter(a => !seen.includes(a.id));
+  return selectArticleWithAuthorCooldown(unseen, history, today);
+}
+
+function selectArticleWithAuthorCooldown(unseenArticles, history, today = new Date()) {
+  if (!Array.isArray(unseenArticles) || unseenArticles.length === 0) return null;
+
+  const { last4DayAuthors, yesterdayAuthors } = getRecentAuthorSets(history, today);
+  const tier1 = unseenArticles.filter(a => !last4DayAuthors.has(normalizeAuthor(a.author)));
+  if (tier1.length > 0) return pickRandom(tier1);
+
+  const tier2 = unseenArticles.filter(a => !yesterdayAuthors.has(normalizeAuthor(a.author)));
+  if (tier2.length > 0) return pickRandom(tier2);
+
+  return pickRandom(unseenArticles);
+}
+
+function pickRandom(items) {
+  return items[Math.floor(Math.random() * items.length)];
 }
 
 
@@ -213,7 +302,7 @@ async function saveCurrent(id, date) {
 
 // ─── Seen-list (kept in localStorage for speed — tiny data) ──────────────────
 
-function loadSeen(articles) {
+function loadSeen() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_SEEN);
     return raw ? JSON.parse(raw) : [];
