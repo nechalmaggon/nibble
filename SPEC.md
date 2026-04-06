@@ -119,7 +119,7 @@ If a match is found and the href starts with `http`, that URL is used. Otherwise
 | `chrome.storage.local` | `nibble_current` | `{ id, date }` — today's selected article |
 | `chrome.storage.local` | `nibble_history` | Last 30 daily picks: `{ articleId, author, date }` (local `YYYY-MM-DD`) |
 | `chrome.storage.local` | `nibble_custom_shortcuts` | Array of user-added shortcuts: `{ id, title, url, addedAt }` |
-| `chrome.storage.local` | `nibble_theme` | Active theme key (`"default"`, `"matcha"`, `"oceandrift"`, `"inkrose"`, or `"oatlatte"`); absent = default |
+| `chrome.storage.local` | `nibble_theme` | Active theme key (`"default"`, `"matcha"`, `"oceandrift"`, `"inkrose"`, `"oatlatte"`, or `"midnightmono"`); absent = default |
 | `localStorage` | `nibble_seen` | Array of article IDs already shown on previous days |
 
 ---
@@ -289,6 +289,7 @@ Each row contains a swatch cluster (3 × 12px circles with slight overlap), the 
 | `oceandrift` | ocean drift | `#EDF6F9`, `#83C5BE`, `#006D77` |
 | `inkrose` | ink & rose | `#1C1014`, `#8B3A56`, `#E8759A` |
 | `oatlatte` | oat latte | `#FBF7F1`, `#E8D6C3`, `#8B5E3C` |
+| `midnightmono` | midnight mono | `#0D0D0F`, `#232327`, `#6E6E73` |
 
 **Theme application:**
 - Themes are implemented as CSS `[data-theme="key"]` overrides on `<body>` that re-define all design tokens. The `default` theme removes the `data-theme` attribute entirely so the `:root` defaults apply.
@@ -370,6 +371,13 @@ The decoration layer is loaded dynamically per theme from standalone SVG files i
 - Leaf clusters recoloured to soft sage (`#A9C3A6`, `#DDECDD`)
 - Plus signs recoloured (`#D8C0A7`, `#CDB9A3`, `#8B5E3C`)
 
+`assets/deco/midnightmono.svg` keeps the same element count, motif types, positions, and spread as `default.svg`, but is reskinned:
+- Monochrome flower clusters with soft graphite/silver fills (`#6F6F74`, `#D9D9D4`, `#A8A8A2`)
+- Silver sparkle stars, muted grey star outlines, and heart outlines (`#D9D9D4`, `#6F6F74`, `#A8A8A2`)
+- Loose dots recoloured to soft monochrome neutrals (`#6F6F74`, `#A8A8A2`, `#D9D9D4`)
+- Subtle dark leaf clusters near lower corners (`#3B3B42`, `#0D0D0F`)
+- Plus signs recoloured with graphite/silver tones (`#6F6F74`, `#A8A8A2`)
+
 ---
 
 ## Design System
@@ -384,6 +392,7 @@ All colours are defined as CSS custom properties on `:root`. Theme overrides are
 - `oceandrift` — `data-theme="oceandrift"` on `<body>`
 - `inkrose` — `data-theme="inkrose"` on `<body>`
 - `oatlatte` — `data-theme="oatlatte"` on `<body>`
+- `midnightmono` — `data-theme="midnightmono"` on `<body>`
 
 ### Colors (CSS Custom Properties)
 
@@ -569,6 +578,7 @@ nibble/
         ├── default.svg    Cherry blossom decoration layer
         ├── inkrose.svg    Ink & Rose decoration layer
         ├── matcha.svg     Matcha decoration layer
+        ├── midnightmono.svg Midnight Mono decoration layer
         ├── oatlatte.svg   Oat Latte decoration layer
         └── oceandrift.svg Ocean Drift decoration layer
 ```
@@ -583,4 +593,4 @@ nibble/
 | `char_shoe.png` and `char_workout.png` | Assets exist but not placed on screen |
 | Article refresh / manual re-fetch | No way for user to force a new fetch without clearing storage |
 | Seen-list persistence across browser profiles | `localStorage` is tab-page local; won't sync across devices |
-| Additional themes | Five themes currently exist (cherry blossom, matcha, ocean drift, ink & rose, oat latte); picker supports more rows |
+| Additional themes | Six themes currently exist (cherry blossom, matcha, ocean drift, ink & rose, oat latte, midnight mono); picker supports more rows |
