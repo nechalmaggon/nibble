@@ -441,6 +441,7 @@ body {
 #main {
   position: relative;
   width: 510px;
+  max-height: 480px;
   background: var(--surface-bg);
   border: 2.5px solid var(--accent);
   box-shadow: 7px 7px 0 var(--accent), 0 28px 80px var(--card-ambient-shadow);
@@ -491,6 +492,10 @@ body {
   text-align: center;
   width: 100%;
   max-width: 360px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .article-desc.hidden { display: none; }
 
