@@ -1,7 +1,7 @@
 # Nibble — Product Specification
 
-**Version:** 1.4
-**Last updated:** 2026-04-05
+**Version:** 1.5
+**Last updated:** 2026-04-10
 
 ---
 
@@ -41,15 +41,14 @@ Load local article store (chrome.storage.local)
 Filter out already-seen articles (localStorage)
     │
     ├─ Unseen articles exist?
-    │     ├─ Tier 1: Author not shown in last 4 days → Pick randomly
-    │     ├─ Tier 2: Author not shown yesterday     → Pick randomly
-    │     └─ Tier 3: Any unseen article             → Pick randomly
+    │     └─ Apply 3-tier author cooldown pick → Show
+    │           ├─ Tier 1: Author not shown in last 4 days → Pick randomly
+    │           ├─ Tier 2: Author not shown yesterday     → Pick randomly
+    │           └─ Tier 3: Any unseen article             → Pick randomly
     │
     │   Save as today's, add to seen list, append author history → Show
     │
-    ├─ All articles seen? → Show empty state: "all nibbled up! ✦ star more newsletters to see them here"
-    │
-    └─ No local articles at all?
+    └─ No unseen articles (local store exhausted OR empty)?
             │
             ▼
         Fetch from Gmail API (up to 50 starred emails, in batches of 10)
@@ -58,9 +57,9 @@ Filter out already-seen articles (localStorage)
         Filter to newsletters only (see: Newsletter Filter)
         Stop once 5 valid newsletters found
             │
-            ├─ Found some → Merge into local store → Apply same 3-tier author cooldown pick → Show
+            ├─ Found new articles → Merge into local store → Apply same 3-tier author cooldown pick → Show
             │
-            └─ Found none → Show empty state ("no nibble today :(")
+            └─ Found none (or all duplicates) → Show empty state: "all nibbled up! ✦ star more newsletters to see them here"
 ```
 
 ### Author Cooldown Rules
@@ -225,13 +224,20 @@ The main article display — a white window-style card (510px wide) with:
 - Sub-label: **"✿ today's garden ✿"**
 - Renders **6 SVG flowers**, each 36×36px
 - Each flower: 6 petals (circles at hex positions, radius 6, opacity 0.85) + center circle (radius 5, opacity 0.7)
-- **6 color pairs** (petal / center):
+- **6 default color pairs** (petal / center):
   1. `#FFB6C1` / `#C4527A` (pink/berry)
   2. `#C3A8E8` / `#7a2040` (lavender/dark berry)
   3. `#8ADAB8` / `#2d7a5a` (mint/dark green)
   4. `#FFD93D` / `#7a6520` (yellow/dark gold)
   5. `#FFB6C1` / `#7a2040` (pink/dark berry)
   6. `#FFDDE8` / `#C4527A` (light pink/berry)
+- **Ink & Rose override pairs** (used only when `nibble_theme === "inkrose"`):
+  1. `#9E5A74` / `#5A1F36`
+  2. `#7A4A62` / `#3D1228`
+  3. `#6B2A44` / `#2A0D1E`
+  4. `#B8748A` / `#6B2A44`
+  5. `#8A3A58` / `#3D1228`
+  6. `#C490A0` / `#7A4A62`
 
 > Note: The flowers are currently static (same palette every day). The "daily" aspect mentioned in the product vision is not yet implemented in code.
 
@@ -334,49 +340,56 @@ The decoration layer is loaded dynamically per theme from standalone SVG files i
 - **Leaf clusters** (ellipse groups): 2 in mint green at bottom corners
 - **Plus signs**: 4 small crosses in pink/lavender
 
-`assets/deco/matcha.svg` keeps the same element count, positions, and spread, but is reskinned:
-- Flowers recoloured to sage tones (`#A8C5A0`, `#C8DFC4`)
-- Four-petal flowers recoloured (`#8ABF94`, `#C8DFC4`)
-- Sparkle stars recoloured (`#3D6B4F`, `#A8C5A0`)
-- 5-pointed star outlines recoloured (`#A8C5A0`, `#6BAF8A`)
-- Heart outlines replaced with simple leaf-outline paths (`#3D6B4F`, `#6BAF8A`)
-- Loose dots recoloured (`#A8C5A0`, `#6BAF8A`, `#3D6B4F`)
-- Leaf clusters deepened (`#6BAF8A`, `#3D6B4F`)
-- Plus signs recoloured (`#A8C5A0`, `#8ABF94`)
+`assets/deco/matcha.svg` keeps the same decorative spread and replaces motif families with a tea-ceremony-inspired set:
+- Chawan bowl clusters: 2 side-view bowl clusters with curved bowl body, rim ellipse, foot-ring ellipse, handle path, and foam swirl detail; one cluster includes a chasen whisk accent
+- Ginkgo leaf fans: 2 clusters of 2–3 fan-shaped leaves (center vein + side veins) at varied rotations/scales
+- Asanoha geometric stars: 5 small stroke-only instances (6 radiating lines + hexagon + inner triangulation lines)
+- Bamboo stalk segments: 2 clusters of 2–3 rounded stalks with node ellipses and top leaf-sprout paths
+- Natsume tea jar outlines: 3 instances (rounded body, domed lid arc, knob, and body detail line), including a bottom-right jar paired with a seigaiha fan-arc accent
+- Loose dots retained and recoloured to matcha accents; smallest dot positions are replaced with shippo ring overlaps
+- Leaf clusters keep the 3-ellipse structure and are recoloured to matcha greens
+- Plus signs keep their cross structure and are recoloured to matcha accents
 
-`assets/deco/oceandrift.svg` keeps the same fixed full-screen structure and comparable visual density/spread, with coastal reskin motifs:
-- Coral/anemone-style bloom clusters in mixed cool + warm tones (`#83C5BE`, `#CDECEC`, `#FFDDD2`, `#E29578`)
-- Bubble-cluster shimmer marks replacing sparkle paths (still edge-distributed at similar positions)
-- Pale aqua/teal star outlines retained (`#CDECEC`, `#83C5BE`, `#DDF3F1`)
-- Shell-like outline motifs replacing hearts (`#E29578`, `#FFDDD2`, `#8C5B4D`)
-- Loose dots recoloured to ocean + shell accents (`#83C5BE`, `#5E7B80`, `#006D77`, `#E29578`)
-- Soft rounded seaweed frond clusters at the lower corners (`#83C5BE`, `#67B5AE`, `#CDECEC`)
-- Plus signs retained and recoloured to teal/aqua (`#83C5BE`, `#CDECEC`, `#006D77`)
+`assets/deco/oceandrift.svg` is a full replacement motif set (not a direct reskin of `default.svg`) on `viewBox="0 0 1440 900"` with the same fixed overlay behavior:
+- Ripple arcs: 8 instances of stacked open bezier arcs (`#83C5BE`, `#CDECEC`) replacing sparkle stars
+- Bubble clusters: 6 edge/corner clusters of overlapping circles (`#CDECEC` fills with `#83C5BE` strokes; smallest bubbles use low-opacity `#83C5BE` fill)
+- Starfish: 5 instances made from 5 rotated ellipses + center circle (`#EBAF9A`, `#FFDDD2`, `#C4907A`)
+- Shell outlines: 5 instances using 3 concentric offset ellipses + ridge lines (`#FFDDD2`, `#EBAF9A`)
+- Seaweed fronds: 2 bottom-corner clusters using 4 airy fanned ellipses (`#AADDD6` fill, `#83C5BE` stroke)
+- Loose dots: 7 scattered dots (`#83C5BE`, `#CDECEC`, `#EBAF9A`, and max two `#006D77`)
+- Plus signs: 4 small crosses in teal/aqua (`#83C5BE`, `#CDECEC`)
+- Motifs are intentionally kept out of the central card-safe zone (roughly `x=560–880`, `y=300–500`)
 
 `assets/deco/inkrose.svg` keeps the same element count, positions, and spread as `default.svg`, but is reskinned:
-- Flowers recoloured to rose/mauve/blush (`#8B3A56`, `#A0728B`, `#D8A8B8`)
-- Sparkles recoloured (`#E8759A`, `#D8A8B8`)
-- 5-pointed star outlines recoloured (`#A0728B`, `#8B3A56`)
-- Heart outlines recoloured (`#E8759A`, `#8B3A56`)
-- Loose dots recoloured with rose/plum tones (`#8B3A56`, `#A0728B`, `#D8A8B8`, `#E8759A`, `#24161B`)
-- Leaf clusters deepened (`#355E4D`, `#24161B`)
-- Plus signs recoloured (`#8B3A56`, `#A0728B`)
+- Flowers recoloured to deeper rose/mauve tones (`#6B2A44`, `#7A4A62`, `#9E5A74`)
+- Sparkles recoloured (`#8B3A56`, `#9E5A74`)
+- 5-pointed star outlines recoloured (`#7A4A62`, `#6B2A44`)
+- Heart outlines recoloured (`#8B3A56`, `#6B2A44`)
+- Loose dots recoloured with deeper rose/plum tones (`#6B2A44`, `#7A4A62`, `#9E5A74`, `#8B3A56`, `#1A0E13`)
+- Leaf clusters deepened (`#2A4A3A`, `#1A0E13`)
+- Plus signs recoloured (`#6B2A44`, `#7A4A62`)
 
-`assets/deco/oatlatte.svg` keeps the same element count, motif types, positions, and spread as `default.svg`, but is reskinned:
-- Flowers recoloured to cream/biscuit/oat tones (`#E8D6C3`, `#F2E4C8`, `#CDB9A3`)
-- Sparkles recoloured to cocoa/tan (`#8B5E3C`, `#6B4D36`, `#D8C0A7`)
-- 5-pointed star outlines recoloured (`#CDB9A3`, `#D8C0A7`, `#E8D6C3`)
-- Heart outlines recoloured (`#8B5E3C`, `#6B4D36`, `#CDB9A3`)
-- Loose dots recoloured with warm neutrals + muted sage (`#FFF8EE`, `#F2E4C8`, `#8B5E3C`, `#A9C3A6`)
-- Leaf clusters recoloured to soft sage (`#A9C3A6`, `#DDECDD`)
-- Plus signs recoloured (`#D8C0A7`, `#CDB9A3`, `#8B5E3C`)
+`assets/deco/oatlatte.svg` keeps the same element count, positions, and spread as `default.svg`, but replaces motif families with an oat-latte set:
+- Coffee cup top-view clusters (saucer, cup body, rim, handle, steam wisps): 3 instances
+- Cinnamon stick bundles (3 rounded sticks + subtle grain lines): 2 instances
+- Coffee bean singles/pairs (ellipse + center crease): 8 scattered instances
+- Hexagon outlines and mini honeycomb clusters: 4 instances
+- Journal/notebook outlines (cover, spine, ruled lines): 3 instances
+- Teardrop accent marks and a spoon motif near a cup cluster replace the smallest former star/heart accents
+- Loose dots kept in place and recoloured to caramel (`#C68642`, low-opacity)
+- Leaf clusters keep the same ellipse-group structure in sage tones (`#A9B99A`, `#8BA67A`)
+- Plus signs keep the same cross structure, recoloured to oat/caramel/sage accents
 
-`assets/deco/midnightmono.svg` keeps the same element count, motif types, positions, and spread as `default.svg`, but is reskinned:
-- Monochrome flower clusters with soft graphite/silver fills (`#6F6F74`, `#D9D9D4`, `#A8A8A2`)
-- Silver sparkle stars, muted grey star outlines, and heart outlines (`#D9D9D4`, `#6F6F74`, `#A8A8A2`)
-- Loose dots recoloured to soft monochrome neutrals (`#6F6F74`, `#A8A8A2`, `#D9D9D4`)
-- Subtle dark leaf clusters near lower corners (`#3B3B42`, `#0D0D0F`)
-- Plus signs recoloured with graphite/silver tones (`#6F6F74`, `#A8A8A2`)
+`assets/deco/midnightmono.svg` keeps `default.svg` as its canonical layout base (same positional spread and anchor transforms), but swaps the motif families into a monochrome night-sky system:
+- Circle-petal flower clusters become moon-phase clusters (full moon outline + crescent + quarter + small gibbous), centered on each original flower anchor
+- Four-petal ellipse flowers become prism/crystal clusters using elongated hexagonal outlines with interior facet lines
+- Sparkle stars keep the same 8-point path geometry and placement, recoloured to silver/graphite
+- 5-point star outlines become constellation fragments (small star nodes connected by thin lines, with one larger anchor star per cluster)
+- Heart outlines are replaced by alternating retro-tech outlines (cassette and floppy-disk forms)
+- Loose dots stay in place in silver/graphite; two smallest-dot positions are rendered as crosshair marks (dot + horizontal/vertical axis lines)
+- Leaf clusters keep the 3-ellipse structure, recoloured to dark graphite with silver strokes, and each cluster gains a nearby comet trail accent
+- Plus signs keep the same cross structure and positions, recoloured to graphite/silver
+- Additional monochrome celestial accents include Saturn outlines and a snowflake motif at existing decoration anchor positions
 
 ---
 

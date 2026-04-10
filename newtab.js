@@ -49,6 +49,15 @@ const BLOOM_COLORS = [
   ['#FFDDE8', '#C4527A'],
 ];
 
+const INKROSE_BLOOM_COLORS = [
+  ['#9E5A74', '#5A1F36'],
+  ['#7A4A62', '#3D1228'],
+  ['#6B2A44', '#2A0D1E'],
+  ['#B8748A', '#6B2A44'],
+  ['#8A3A58', '#3D1228'],
+  ['#C490A0', '#7A4A62'],
+];
+
 
 // ─── Entry point ──────────────────────────────────────────────────────────────
 
@@ -98,6 +107,7 @@ function initThemeSwitcher(currentTheme) {
       const key = row.dataset.themeKey;
       await applyTheme(key);
       storageSet({ nibble_theme: key });
+      renderBlooms(key);
       panel.classList.remove('open');
     });
   });
@@ -115,7 +125,7 @@ function initThemeSwitcher(currentTheme) {
   initThemeSwitcher(savedTheme);
 
   setCookieMascot();
-  renderBlooms();
+  renderBlooms(savedTheme);
   renderShortcuts();
   renderRecentTabs();
 
@@ -135,42 +145,32 @@ function initThemeSwitcher(currentTheme) {
       }
     }
 
-    // Need a fresh pick — try from existing articles first
-    let seen     = loadSeen();
-    let unseen   = articles.filter(a => !seen.includes(a.id));
+    // Need a fresh pick — check unseen local articles first
+    let seen   = loadSeen();
+    let unseen = articles.filter(a => !seen.includes(a.id));
 
-    if (unseen.length === 0 && articles.length > 0) {
-      // Seen everything — prompt user to star more newsletters
+    // If nothing unseen locally (or no articles at all), fetch from Gmail
+    if (unseen.length === 0) {
+      const token   = await getAuthToken();
+      const fetched = await fetchNewslettersFromGmail(token);
+
+      if (fetched.length > 0) {
+        const existingIds = new Set(articles.map(a => a.id));
+        const newArticles = fetched.filter(a => !existingIds.has(a.id));
+        articles = [...articles, ...newArticles];
+        await storageSet({ [STORAGE_KEY_ARTICLES]: articles });
+
+        // Re-evaluate unseen after merge
+        seen   = loadSeen();
+        unseen = articles.filter(a => !seen.includes(a.id));
+      }
+    }
+
+    if (unseen.length === 0) {
       renderEmpty('all nibbled up! ✦ star more newsletters to see them here');
       return;
     }
 
-    if (unseen.length > 0) {
-      const picked = selectArticleForToday(articles, history);
-      await saveCurrent(picked.id, today);
-      addToSeen(picked.id);
-      history = appendToHistory(history, picked, today);
-      await storageSet({ [STORAGE_KEY_HISTORY]: history });
-      renderArticle(picked, articles);
-      return;
-    }
-
-    // No local articles at all — fetch from Gmail
-    const token   = await getAuthToken();
-    const fetched = await fetchNewslettersFromGmail(token);
-
-    if (fetched.length === 0) {
-      renderEmpty();
-      return;
-    }
-
-    // Merge new articles into the store (avoid duplicates)
-    const existingIds = new Set(articles.map(a => a.id));
-    const newArticles = fetched.filter(a => !existingIds.has(a.id));
-    articles = [...articles, ...newArticles];
-    await storageSet({ [STORAGE_KEY_ARTICLES]: articles });
-
-    // Pick one using author cooldown tiers
     const picked = selectArticleForToday(articles, history);
     if (!picked) {
       renderEmpty('all nibbled up! ✦ star more newsletters to see them here');
@@ -539,11 +539,13 @@ function setCookieMascot() {
 
 // ─── BLOOMS.SYS flowers ───────────────────────────────────────────────────────
 
-function renderBlooms() {
+function renderBlooms(theme = 'default') {
   const container = document.getElementById('blooms-flowers');
   if (!container) return;
+  container.innerHTML = '';
 
   const NS = 'http://www.w3.org/2000/svg';
+  const bloomColors = theme === 'inkrose' ? INKROSE_BLOOM_COLORS : BLOOM_COLORS;
   const PETAL_POSITIONS = [
     [0, -9], [7.8, -4.5], [7.8, 4.5], [0, 9], [-7.8, 4.5], [-7.8, -4.5]
   ];
@@ -558,7 +560,7 @@ function renderBlooms() {
     return el;
   }
 
-  BLOOM_COLORS.forEach(([petal, center]) => {
+  bloomColors.forEach(([petal, center]) => {
     const svg = document.createElementNS(NS, 'svg');
     svg.setAttribute('width', '36');
     svg.setAttribute('height', '36');
