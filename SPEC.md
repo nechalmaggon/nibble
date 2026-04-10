@@ -1,6 +1,6 @@
 # Nibble — Product Specification
 
-**Version:** 1.5
+**Version:** 1.6
 **Last updated:** 2026-04-10
 
 ---
@@ -149,7 +149,7 @@ The page is a single, centred composition. Everything is visible at once — no 
 │  ┌─────────────┐    [cookie mascot]    ┌─────────────────┐   │
 │  │ TABS.SYS    │   ┌─────────────────┐ │  BLOOMS.SYS     │   │
 │  │             │   │   nibble.exe    │ │                 │   │
-│  │ (recently   │   │  Author @ src   │ │  ✿ today's     │   │
+│  │ (recently   │   │  Author @ src   │ │  ✿ reading     │   │
 │  │  closed     │   │  Date           │ │    garden ✿    │   │
 │  │  tabs)      │   │  Article title  │ │                 │   │
 │  │             │   │  Description    │ │  (6 SVG flowers)│   │
@@ -218,11 +218,17 @@ The main article display — a white window-style card (510px wide) with:
 - Hover: subtle yellow highlight
 - Empty state: "nothing here yet ♡"
 
-### 5. BLOOMS.SYS (Bloom Garden)
+### 5. BLOOMS.SYS (Reading Garden) ✅ v1.6
 - Right panel, 200px wide
 - Mint-tinted window (`#f2fffb`, mint border/shadow) labeled **"BLOOMS.SYS"**
-- Sub-label: **"✿ today's garden ✿"**
-- Renders **6 SVG flowers**, each 36×36px
+- Title: **"✿ reading garden ✿"**, subtitle: **"nibble daily to nourish ✿"**
+- Renders a living SVG garden that grows with lifetime reads and wilts when the user stops reading
+- **Storage keys:** `nibble_total_reads` (int), `nibble_health` (float 0–100), `nibble_health_last_drained` (YYYY-MM-DD)
+- **Growth stages:** seeds (0), sapling (1–3), sprout (4–9), small-garden (10–19), full-garden (20–29), thriving (30+)
+- **Health states:** healthy (80–100), thirsty (55–79), wilting (30–54), needs-you (10–29), bare (0–9)
+- **Drain:** once per calendar day based on current stage (0–18 pts/day, max 14 days clamped)
+- **Recovery:** on each Nibble click (15–35 pts based on stage, clamped to 100)
+- **Thriving stage:** adds animated bee, sun, sparkles, grass, and gentle sway on flowers (blooms-* keyframe prefix)
 - Each flower: 6 petals (circles at hex positions, radius 6, opacity 0.85) + center circle (radius 5, opacity 0.7)
 - **6 default color pairs** (petal / center):
   1. `#FFB6C1` / `#C4527A` (pink/berry)

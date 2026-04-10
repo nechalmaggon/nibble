@@ -39,24 +39,6 @@ const COOKIE_ASSETS = [
   'assets/cookies/cookie_heart.png',
 ];
 
-// Blooms flower colours for BLOOMS.SYS widget
-const BLOOM_COLORS = [
-  ['#FFB6C1', '#C4527A'],
-  ['#C3A8E8', '#7a2040'],
-  ['#8ADAB8', '#2d7a5a'],
-  ['#FFD93D', '#7a6520'],
-  ['#FFB6C1', '#7a2040'],
-  ['#FFDDE8', '#C4527A'],
-];
-
-const INKROSE_BLOOM_COLORS = [
-  ['#9E5A74', '#5A1F36'],
-  ['#7A4A62', '#3D1228'],
-  ['#6B2A44', '#2A0D1E'],
-  ['#B8748A', '#6B2A44'],
-  ['#8A3A58', '#3D1228'],
-  ['#C490A0', '#7A4A62'],
-];
 
 
 // ─── Entry point ──────────────────────────────────────────────────────────────
@@ -107,7 +89,7 @@ function initThemeSwitcher(currentTheme) {
       const key = row.dataset.themeKey;
       await applyTheme(key);
       storageSet({ nibble_theme: key });
-      renderBlooms(key);
+      renderGarden();
       panel.classList.remove('open');
     });
   });
@@ -125,7 +107,7 @@ function initThemeSwitcher(currentTheme) {
   initThemeSwitcher(savedTheme);
 
   setCookieMascot();
-  renderBlooms(savedTheme);
+  drainHealthIfNeeded().then(() => renderGarden());
   renderShortcuts();
   renderRecentTabs();
 
@@ -537,42 +519,336 @@ function setCookieMascot() {
 }
 
 
-// ─── BLOOMS.SYS flowers ───────────────────────────────────────────────────────
+// ─── Reading Garden (BLOOMS.SYS) ─────────────────────────────────────────────
 
-function renderBlooms(theme = 'default') {
-  const container = document.getElementById('blooms-flowers');
-  if (!container) return;
-  container.innerHTML = '';
+const STORAGE_KEY_TOTAL_READS    = 'nibble_total_reads';
+const STORAGE_KEY_HEALTH         = 'nibble_health';
+const STORAGE_KEY_HEALTH_DRAINED = 'nibble_health_last_drained';
 
-  const NS = 'http://www.w3.org/2000/svg';
-  const bloomColors = theme === 'inkrose' ? INKROSE_BLOOM_COLORS : BLOOM_COLORS;
-  const PETAL_POSITIONS = [
-    [0, -9], [7.8, -4.5], [7.8, 4.5], [0, 9], [-7.8, 4.5], [-7.8, -4.5]
-  ];
+const GARDEN_SOIL_Y = 84;
+const GARDEN_SVG_W  = 156;
+const GARDEN_SVG_H  = 110;
 
-  function makeCircle(cx, cy, r, fill, opacity) {
-    const el = document.createElementNS(NS, 'circle');
-    el.setAttribute('cx', cx);
-    el.setAttribute('cy', cy);
-    el.setAttribute('r', r);
-    el.setAttribute('fill', fill);
-    el.setAttribute('opacity', opacity);
-    return el;
+const GARDEN_FLOWER_COLORS = [
+  { petal: '#FFB6C1', center: '#C4527A' },
+  { petal: '#C3A8E8', center: '#7a2040' },
+  { petal: '#8ADAB8', center: '#2d7a5a' },
+  { petal: '#FFD93D', center: '#7a6520' },
+  { petal: '#FFDDE8', center: '#C4527A' },
+];
+
+function getStage(totalReads) {
+  if (totalReads === 0)  return 'seeds';
+  if (totalReads <= 3)   return 'sapling';
+  if (totalReads <= 9)   return 'sprout';
+  if (totalReads <= 19)  return 'small-garden';
+  if (totalReads <= 29)  return 'full-garden';
+  return 'thriving';
+}
+
+function getHealthState(health) {
+  if (health >= 80) return 'healthy';
+  if (health >= 55) return 'thirsty';
+  if (health >= 30) return 'wilting';
+  if (health >= 10) return 'needs-you';
+  return 'bare';
+}
+
+function getDrainPerDay(stage) {
+  const map = { seeds: 0, sapling: 8, sprout: 10, 'small-garden': 12, 'full-garden': 15, thriving: 18 };
+  return map[stage] || 0;
+}
+
+function getRecovery(stage) {
+  const map = { sapling: 35, sprout: 30, 'small-garden': 25, 'full-garden': 20, thriving: 15 };
+  return map[stage] !== undefined ? map[stage] : 35;
+}
+
+async function drainHealthIfNeeded() {
+  const result = await storageGet([STORAGE_KEY_TOTAL_READS, STORAGE_KEY_HEALTH, STORAGE_KEY_HEALTH_DRAINED]);
+  const totalReads  = result[STORAGE_KEY_TOTAL_READS] || 0;
+  let   health      = result[STORAGE_KEY_HEALTH] !== undefined ? result[STORAGE_KEY_HEALTH] : 100;
+  const lastDrained = result[STORAGE_KEY_HEALTH_DRAINED] || null;
+  const today       = getLocalDateString();
+
+  if (lastDrained === today) return;
+
+  if (lastDrained) {
+    const stage       = getStage(totalReads);
+    const drainPerDay = getDrainPerDay(stage);
+    if (drainPerDay > 0) {
+      const lastDate  = new Date(lastDrained + 'T00:00:00');
+      const todayDate = new Date(today + 'T00:00:00');
+      const diffDays  = Math.floor((todayDate - lastDate) / (24 * 60 * 60 * 1000));
+      const days      = Math.min(diffDays, 14);
+      health          = Math.max(0, health - drainPerDay * days);
+    }
   }
 
-  bloomColors.forEach(([petal, center]) => {
-    const svg = document.createElementNS(NS, 'svg');
-    svg.setAttribute('width', '36');
-    svg.setAttribute('height', '36');
-    svg.setAttribute('viewBox', '-18 -18 36 36');
+  await storageSet({ [STORAGE_KEY_HEALTH]: health, [STORAGE_KEY_HEALTH_DRAINED]: today });
+}
 
-    PETAL_POSITIONS.forEach(([cx, cy]) => {
-      svg.appendChild(makeCircle(cx, cy, 6, petal, '.85'));
+// Build SVG markup for a single flower + stem + leaves.
+// swayDuration > 0 enables the thriving sway animation.
+function buildFlowerSVG(cx, cy, soilY, colors, healthState, swayDuration, swayDelay) {
+  const { petal: petalColor, center: centerColor } = colors;
+  const soilLocalY = soilY - cy;
+  const mid        = (soilY + cy) / 2;
+  const leafMidY   = soilY - (soilY - cy) * 0.4;
+
+  // Stem
+  let stemColor = '#6BAF8A', stemOpacity = 1, stemLean = 0;
+  if (healthState === 'thirsty')   { stemOpacity = 0.6; }
+  if (healthState === 'wilting')   { stemLean = 5;  stemOpacity = 0.7; }
+  if (healthState === 'needs-you') { stemLean = 12; stemOpacity = 0.55; stemColor = '#aaa'; }
+  if (healthState === 'bare')      { stemLean = 8;  stemOpacity = 0.45; stemColor = '#999'; }
+
+  const stemPath = `<path d="M ${cx},${soilY} Q ${cx + stemLean},${mid} ${cx},${cy}" stroke="${stemColor}" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="${stemOpacity}"/>`;
+
+  // Leaves (hidden on bare / needs-you)
+  let leaves = '';
+  if (healthState !== 'bare' && healthState !== 'needs-you') {
+    const lop  = healthState === 'wilting' ? 0.38 : (healthState === 'thirsty' ? 0.55 : 0.75);
+    const rotL = healthState === 'wilting' ? -52 : -30;
+    const rotR = healthState === 'wilting' ?  52 :  30;
+    const llx = cx - 5, lly = leafMidY;
+    const lrx = cx + 5, lry = leafMidY;
+    leaves = `
+      <ellipse cx="${llx}" cy="${lly}" rx="7" ry="2.2" fill="#8ADAB8" opacity="${lop}" transform="rotate(${rotL} ${llx} ${lly})"/>
+      <ellipse cx="${lrx}" cy="${lry}" rx="7" ry="2.2" fill="#8ADAB8" opacity="${lop}" transform="rotate(${rotR} ${lrx} ${lry})"/>`;
+  }
+
+  // Petals & centre
+  let petalsStr = '';
+  let centreStr = '';
+
+  if (healthState === 'healthy') {
+    petalsStr = [0,30,60,90,120,150,180,210,240,270,300,330]
+      .map(r => `<ellipse cx="0" cy="-10" rx="2.8" ry="10" fill="${petalColor}" opacity=".93" transform="rotate(${r})"/>`)
+      .join('');
+    centreStr = `<circle r="4" fill="${centerColor}" opacity=".95"/>`;
+
+  } else if (healthState === 'thirsty') {
+    petalsStr = [0,30,60,90,120,150,180,210,240,270,300,330]
+      .map(r => `<ellipse cx="0" cy="-10" rx="2.8" ry="9" fill="${petalColor}" opacity=".55" transform="rotate(${r})"/>`)
+      .join('');
+    centreStr = `<circle r="4" fill="${centerColor}" opacity=".58"/>`;
+
+  } else if (healthState === 'wilting') {
+    // Per-petal explicit drooping angles — top near-upright, sides droop, bottom hang
+    const wiltPetals = [
+      [0, 0.55], [30, 0.55], [330, 0.55],
+      [88, 0.4], [118, 0.4],
+      [242, 0.4], [272, 0.4],
+      [148, 0.32], [163, 0.30], [180, 0.28], [197, 0.30], [212, 0.32]
+    ];
+    petalsStr = wiltPetals.map(([angle, op]) =>
+      `<ellipse cx="0" cy="-10" rx="2.8" ry="10" fill="${petalColor}" opacity="${op}" transform="rotate(${angle})"/>`
+    ).join('');
+    centreStr = `<circle r="4" fill="${centerColor}" opacity=".42"/>`;
+    // Teardrop water drop near stem base (local space)
+    const dropY = soilLocalY - 16;
+    petalsStr += `<ellipse cx="3" cy="${dropY + 3}" rx="2.5" ry="3.5" fill="#a8d8ea" opacity=".5"/>
+      <ellipse cx="3" cy="${dropY}" rx="1.5" ry="2" fill="#a8d8ea" opacity=".4"/>`;
+
+  } else if (healthState === 'needs-you') {
+    // Only 3 grey top petals remain
+    const topPetals = [[0, 0.35], [30, 0.28], [330, 0.28]];
+    petalsStr = topPetals.map(([angle, op]) =>
+      `<ellipse cx="0" cy="-10" rx="2.8" ry="9" fill="#ccc" opacity="${op}" transform="rotate(${angle})"/>`
+    ).join('');
+    centreStr = `<circle r="4" fill="#aaa" opacity=".32"/>`;
+    // Fallen petals scattered at soil level (local space)
+    const fallenXs   = [-28, -18, -7, 4, 14, 24, 33, -38, 40];
+    const fallenRots = [-25, 15, -10, 20, -15, 8, -22, 12, -5];
+    fallenXs.forEach((px, i) => {
+      const fy = soilLocalY - 1;
+      const fc = i % 2 === 0 ? '#ddd' : '#ccc';
+      const fo = (0.28 + (i % 3) * 0.04).toFixed(2);
+      petalsStr += `<ellipse cx="${px}" cy="${fy}" rx="9" ry="2" fill="${fc}" opacity="${fo}" transform="rotate(${fallenRots[i]} ${px} ${fy})"/>`;
     });
-    svg.appendChild(makeCircle(0, 0, 5, center, '.7'));
 
-    container.appendChild(svg);
-  });
+  } else { // bare
+    centreStr = `<circle r="3" fill="#bbb" opacity=".15"/>`;
+  }
+
+  // Sway inner wrapper (thriving + healthy only)
+  let innerAttr = '';
+  if (swayDuration > 0 && healthState === 'healthy') {
+    innerAttr = ` style="transform-origin: 0px ${soilLocalY}px; animation: blooms-sway ${swayDuration}s ease-in-out ${swayDelay}s infinite;"`;
+  }
+
+  const flowerGroup = `<g transform="translate(${cx},${cy})"><g${innerAttr}>${petalsStr}${centreStr}</g></g>`;
+  return stemPath + leaves + flowerGroup;
+}
+
+function buildSunSVG(opacity) {
+  const cx = 138, cy = 14;
+  let rays = '';
+  for (let i = 0; i < 8; i++) {
+    const rad = (i * 45) * Math.PI / 180;
+    const x1 = (cx + Math.cos(rad) * 8).toFixed(1);
+    const y1 = (cy + Math.sin(rad) * 8).toFixed(1);
+    const x2 = (cx + Math.cos(rad) * 13).toFixed(1);
+    const y2 = (cy + Math.sin(rad) * 13).toFixed(1);
+    rays += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#FFD93D" stroke-width="1.5" stroke-linecap="round" opacity="${(opacity * 0.85).toFixed(2)}"/>`;
+  }
+  return `<circle cx="${cx}" cy="${cy}" r="6" fill="#FFD93D" opacity="${opacity}"/>${rays}`;
+}
+
+function buildBeeSVG(opacity) {
+  return `<g style="animation: blooms-beeDrift 4s ease-in-out infinite;" opacity="${opacity}">
+    <ellipse cx="18" cy="18" rx="5" ry="3.5" fill="#FFD93D" opacity=".92"/>
+    <line x1="15" y1="17.2" x2="21" y2="17.2" stroke="#7a6520" stroke-width="1" opacity=".6"/>
+    <line x1="15.5" y1="18.8" x2="20.5" y2="18.8" stroke="#7a6520" stroke-width="1" opacity=".6"/>
+    <ellipse cx="15.5" cy="15" rx="4" ry="2.5" fill="#C3A8E8" opacity=".72" transform="rotate(-20 15.5 15)"/>
+    <ellipse cx="20.5" cy="15" rx="4" ry="2.5" fill="#C3A8E8" opacity=".72" transform="rotate(20 20.5 15)"/>
+  </g>`;
+}
+
+function buildSparklesSVG(opacity) {
+  const list = [
+    { x: 70, y: 12, color: '#FFD93D', size: 9, dur: 2.5, delay: 0   },
+    { x: 22, y: 40, color: '#C3A8E8', size: 8, dur: 2.0, delay: 0.7 },
+    { x: 118, y: 30, color: '#FFD93D', size: 8, dur: 3.0, delay: 1.4 },
+  ];
+  return list.map(s =>
+    `<text x="${s.x}" y="${s.y}" fill="${s.color}" font-size="${s.size}" text-anchor="middle" opacity="${(opacity * 0.85).toFixed(2)}" style="animation: blooms-twinkle ${s.dur}s ease-in-out ${s.delay}s infinite;">✦</text>`
+  ).join('');
+}
+
+function buildGrassSVG(healthState) {
+  if (healthState === 'needs-you' || healthState === 'bare') return '';
+  const op = healthState === 'wilting' ? 0.4 : 0.7;
+  const soilY = GARDEN_SOIL_Y;
+  const blades = [
+    [14, -2, -1], [24, 2, 2], [36, -1, -2], [48, 3, 2], [62, -2, -3],
+    [74, 1, 1], [90, -3, -2], [104, 2, 3], [116, -1, -1], [128, 3, 2], [140, -2, -2]
+  ];
+  return blades.map(([x, lean, leanTop], i) => {
+    const stroke = i % 2 === 0 ? '#6BAF8A' : '#8ADAB8';
+    return `<path d="M ${x},${soilY} Q ${x + lean},${soilY - 8} ${x + leanTop},${soilY - 14}" stroke="${stroke}" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="${op}"/>`;
+  }).join('');
+}
+
+function buildGardenSVG(stage, healthState) {
+  const soilY = GARDEN_SOIL_Y;
+  let content = '';
+
+  // Soil line
+  content += `<rect x="8" y="${soilY}" width="140" height="2.5" rx="1.2" fill="#C8DFC4" opacity=".5"/>`;
+
+  if (stage === 'seeds') {
+    const seedXs = [28, 50, 78, 106, 128];
+    seedXs.forEach(x => {
+      content += `<circle cx="${x}" cy="${soilY - 3}" r="2.5" fill="#C8DFC4" opacity=".7"/>`;
+      content += `<path d="M ${x},${soilY - 3} Q ${x + 1},${soilY - 9} ${x},${soilY - 11}" stroke="#8ADAB8" stroke-width="1" fill="none" stroke-linecap="round" opacity=".5"/>`;
+    });
+
+  } else if (stage === 'sapling') {
+    const cx = 78, budY = soilY - 42;
+    const mid = (soilY + budY) / 2;
+    const leafMidY = soilY - (soilY - budY) * 0.45;
+    const llx = cx - 8, lly = leafMidY;
+    const lrx = cx + 8, lry = leafMidY;
+
+    let stemColor = '#6BAF8A', leafOp = 0.88, budOp = 0.85, tipOp = 0.7;
+    if (healthState === 'thirsty')   { leafOp = 0.55; budOp = 0.55; tipOp = 0.55; }
+    if (healthState === 'wilting')   { leafOp = 0.35; budOp = 0.45; tipOp = 0.35; }
+    if (healthState === 'needs-you' || healthState === 'bare') {
+      stemColor = '#aaa'; leafOp = 0; budOp = 0; tipOp = 0;
+    }
+
+    const rotL = healthState === 'wilting' ? -55 : -38;
+    const rotR = healthState === 'wilting' ?  55 :  38;
+
+    content += `<path d="M ${cx},${soilY} Q ${cx - 2},${mid} ${cx},${budY}" stroke="${stemColor}" stroke-width="1.5" fill="none" stroke-linecap="round"/>`;
+    if (leafOp > 0) {
+      content += `<ellipse cx="${llx}" cy="${lly}" rx="9" ry="3.2" fill="#8ADAB8" opacity="${leafOp}" transform="rotate(${rotL} ${llx} ${lly})"/>`;
+      content += `<ellipse cx="${lrx}" cy="${lry}" rx="9" ry="3.2" fill="#6BAF8A" opacity="${leafOp}" transform="rotate(${rotR} ${lrx} ${lry})"/>`;
+    }
+    if (budOp > 0) content += `<ellipse cx="${cx}" cy="${budY}" rx="3.5" ry="5" fill="#FFDDE8" opacity="${budOp}"/>`;
+    if (tipOp > 0) content += `<ellipse cx="${cx}" cy="${budY - 4}" rx="2.2" ry="3" fill="#FFB6C1" opacity="${tipOp}"/>`;
+
+  } else {
+    // Flower stages: sprout, small-garden, full-garden, thriving
+    const flowerDefs = [];
+
+    if (stage === 'sprout') {
+      flowerDefs.push({ cx: 78, cy: 52, ci: 0 });
+
+    } else if (stage === 'small-garden') {
+      flowerDefs.push({ cx: 44, cy: 56, ci: 0 });
+      flowerDefs.push({ cx: 78, cy: 47, ci: 1 });
+      flowerDefs.push({ cx: 112, cy: 52, ci: 2 });
+
+    } else {
+      // full-garden or thriving — small background flower first (rendered behind)
+      flowerDefs.push({ cx: 94, cy: 63, ci: 2 });
+      flowerDefs.push({ cx: 28, cy: 58, ci: 0, swayD: 4.2, swayDel: 0.3 });
+      flowerDefs.push({ cx: 56, cy: 47, ci: 1, swayD: 3.5, swayDel: 0.9 });
+      flowerDefs.push({ cx: 84, cy: 53, ci: 2, swayD: 5.0, swayDel: 0.0 });
+      flowerDefs.push({ cx: 112, cy: 49, ci: 3, swayD: 3.8, swayDel: 1.4 });
+      flowerDefs.push({ cx: 132, cy: 59, ci: 4, swayD: 4.6, swayDel: 0.6 });
+    }
+
+    // Thriving decorations
+    if (stage === 'thriving') {
+      const showDeco = healthState !== 'needs-you' && healthState !== 'bare';
+      if (showDeco) {
+        const decOp = healthState === 'thirsty' ? 0.5 : 1;
+        if (healthState !== 'wilting') {
+          content += buildSunSVG(decOp);
+          content += buildBeeSVG(decOp);
+        }
+        content += buildGrassSVG(healthState);
+      }
+    }
+
+    for (const fd of flowerDefs) {
+      const colors  = GARDEN_FLOWER_COLORS[fd.ci];
+      const swayD   = (stage === 'thriving' && healthState === 'healthy' && fd.swayD) ? fd.swayD : 0;
+      const swayDel = fd.swayDel || 0;
+      content += buildFlowerSVG(fd.cx, fd.cy, soilY, colors, healthState, swayD, swayDel);
+    }
+
+    // Thriving sparkles (drawn above everything)
+    if (stage === 'thriving' && (healthState === 'healthy' || healthState === 'thirsty')) {
+      content += buildSparklesSVG(healthState === 'thirsty' ? 0.5 : 1);
+    }
+  }
+
+  // Animation keyframes injected into SVG (thriving only, prefixed to avoid conflicts)
+  const styleStr = stage === 'thriving' ? `<style>
+@keyframes blooms-sway {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+@keyframes blooms-beeDrift {
+  0%, 100% { transform: translate(0px, 0px); }
+  25% { transform: translate(3px, -2px); }
+  50% { transform: translate(0px, -3px); }
+  75% { transform: translate(-3px, -1px); }
+}
+@keyframes blooms-twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 0.9; transform: scale(1.1); }
+}
+</style>` : '';
+
+  return `<svg width="${GARDEN_SVG_W}" height="${GARDEN_SVG_H}" viewBox="0 0 ${GARDEN_SVG_W} ${GARDEN_SVG_H}" xmlns="http://www.w3.org/2000/svg">${styleStr}${content}</svg>`;
+}
+
+async function renderGarden() {
+  const result     = await storageGet([STORAGE_KEY_TOTAL_READS, STORAGE_KEY_HEALTH]);
+  const totalReads = result[STORAGE_KEY_TOTAL_READS] || 0;
+  const health     = result[STORAGE_KEY_HEALTH] !== undefined ? result[STORAGE_KEY_HEALTH] : 100;
+  const stage      = getStage(totalReads);
+  const healthState = getHealthState(health);
+
+  const container = document.getElementById('blooms-flowers');
+  if (!container) return;
+  container.innerHTML = buildGardenSVG(stage, healthState);
 }
 
 
@@ -609,6 +885,16 @@ function renderArticle(article, allArticles) {
         a.id === article.id ? { ...a, read: true } : a
       );
       await storageSet({ [STORAGE_KEY_ARTICLES]: articles });
+
+      // Garden: increment reads + recover health
+      const gardenData = await storageGet([STORAGE_KEY_TOTAL_READS, STORAGE_KEY_HEALTH]);
+      const newReads   = (gardenData[STORAGE_KEY_TOTAL_READS] || 0) + 1;
+      const newStage   = getStage(newReads);
+      const recovery   = getRecovery(newStage);
+      const oldHealth  = gardenData[STORAGE_KEY_HEALTH] !== undefined ? gardenData[STORAGE_KEY_HEALTH] : 100;
+      const newHealth  = Math.min(100, oldHealth + recovery);
+      await storageSet({ [STORAGE_KEY_TOTAL_READS]: newReads, [STORAGE_KEY_HEALTH]: newHealth });
+      renderGarden();
     } catch {}
   };
 
