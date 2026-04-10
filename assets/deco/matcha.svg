@@ -4,161 +4,295 @@
      xmlns="http://www.w3.org/2000/svg">
 
   <g transform="translate(78,72)">
-    <circle cx="0" cy="-16" r="11" fill="#A8C5A0" opacity=".7"/>
-    <circle cx="13.9" cy="-8" r="11" fill="#A8C5A0" opacity=".7"/>
-    <circle cx="13.9" cy="8"  r="11" fill="#A8C5A0" opacity=".7"/>
-    <circle cx="0"   cy="16" r="11" fill="#A8C5A0" opacity=".7"/>
-    <circle cx="-13.9" cy="8" r="11" fill="#A8C5A0" opacity=".7"/>
-    <circle cx="-13.9" cy="-8" r="11" fill="#A8C5A0" opacity=".7"/>
-    <circle cx="0" cy="0" r="9" fill="#6BAF8A" opacity=".55"/>
+    <g>
+      <path d="M-26,4 Q0,18 26,4 Q19,15 0,20 Q-19,15 -26,4 Z"
+            fill="#A8C5A0" opacity=".28" stroke="#3D6B4F" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".72"/>
+      <ellipse cx="0" cy="0" rx="24" ry="5.5" fill="#C8DFC4" opacity=".3" stroke="#6BAF8A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".65"/>
+      <ellipse cx="0" cy="20" rx="10" ry="2.7" fill="#C8DFC4" opacity=".2" stroke="#3D6B4F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".66"/>
+      <path d="M24,6 Q33,8 32,16 Q24,19 22,11"
+            fill="none" stroke="#6BAF8A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".68"/>
+      <path d="M-10,0 Q-4,-4 2,0 Q8,4 14,0"
+            fill="none" stroke="#3D6B4F" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".62"/>
+    </g>
+    <g transform="translate(-28,22) scale(.72)">
+      <path d="M-22,3 Q0,14 22,3 Q16,11 0,15 Q-16,11 -22,3 Z"
+            fill="#C8DFC4" opacity=".26" stroke="#6BAF8A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".66"/>
+      <ellipse cx="0" cy="0" rx="20" ry="4.6" fill="#A8C5A0" opacity=".27" stroke="#3D6B4F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".62"/>
+      <ellipse cx="0" cy="15" rx="8" ry="2.4" fill="#C8DFC4" opacity=".2" stroke="#6BAF8A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".58"/>
+      <path d="M20,5 Q27,7 26,13 Q20,15 18,10"
+            fill="none" stroke="#3D6B4F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".62"/>
+      <path d="M-8,0 Q-3,-3 2,0 Q7,3 11,0"
+            fill="none" stroke="#6BAF8A" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".62"/>
+    </g>
+    <g transform="translate(38,18)">
+      <path d="M0,22 Q8,18 8,10" fill="none" stroke="#3D6B4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".74"/>
+      <line x1="8" y1="10" x2="2" y2="0" stroke="#6BAF8A" stroke-width="1" stroke-linecap="round" stroke-opacity=".68"/>
+      <line x1="8" y1="10" x2="4" y2="-2" stroke="#6BAF8A" stroke-width="1" stroke-linecap="round" stroke-opacity=".68"/>
+      <line x1="8" y1="10" x2="7" y2="-3" stroke="#6BAF8A" stroke-width="1" stroke-linecap="round" stroke-opacity=".68"/>
+      <line x1="8" y1="10" x2="10" y2="-3" stroke="#6BAF8A" stroke-width="1" stroke-linecap="round" stroke-opacity=".68"/>
+      <line x1="8" y1="10" x2="13" y2="-2" stroke="#6BAF8A" stroke-width="1" stroke-linecap="round" stroke-opacity=".68"/>
+      <line x1="8" y1="10" x2="16" y2="0" stroke="#6BAF8A" stroke-width="1" stroke-linecap="round" stroke-opacity=".68"/>
+      <line x1="8" y1="10" x2="18" y2="2" stroke="#6BAF8A" stroke-width="1" stroke-linecap="round" stroke-opacity=".68"/>
+      <line x1="8" y1="10" x2="20" y2="5" stroke="#6BAF8A" stroke-width="1" stroke-linecap="round" stroke-opacity=".68"/>
+    </g>
   </g>
-  <g transform="translate(44,165)">
-    <circle cx="0" cy="-11" r="8" fill="#C8DFC4" opacity=".75"/>
-    <circle cx="9.5" cy="-5.5" r="8" fill="#C8DFC4" opacity=".75"/>
-    <circle cx="9.5" cy="5.5"  r="8" fill="#C8DFC4" opacity=".75"/>
-    <circle cx="0"   cy="11"  r="8" fill="#C8DFC4" opacity=".75"/>
-    <circle cx="-9.5" cy="5.5" r="8" fill="#C8DFC4" opacity=".75"/>
-    <circle cx="-9.5" cy="-5.5" r="8" fill="#C8DFC4" opacity=".75"/>
-    <circle cx="0" cy="0" r="7" fill="#3D6B4F" opacity=".45"/>
-  </g>
-  <g transform="translate(258,36)">
-    <circle cx="0" cy="-9" r="6.5" fill="#A8C5A0" opacity=".6"/>
-    <circle cx="7.8" cy="-4.5" r="6.5" fill="#A8C5A0" opacity=".6"/>
-    <circle cx="7.8" cy="4.5"  r="6.5" fill="#A8C5A0" opacity=".6"/>
-    <circle cx="0"   cy="9"   r="6.5" fill="#A8C5A0" opacity=".6"/>
-    <circle cx="-7.8" cy="4.5" r="6.5" fill="#A8C5A0" opacity=".6"/>
-    <circle cx="-7.8" cy="-4.5" r="6.5" fill="#A8C5A0" opacity=".6"/>
-    <circle cx="0" cy="0" r="5.5" fill="#6BAF8A" opacity=".4"/>
-  </g>
+
   <g transform="translate(1148,88)">
-    <circle cx="0" cy="-14" r="10" fill="#A8C5A0" opacity=".65"/>
-    <circle cx="12.1" cy="-7" r="10" fill="#A8C5A0" opacity=".65"/>
-    <circle cx="12.1" cy="7"  r="10" fill="#A8C5A0" opacity=".65"/>
-    <circle cx="0"   cy="14" r="10" fill="#A8C5A0" opacity=".65"/>
-    <circle cx="-12.1" cy="7" r="10" fill="#A8C5A0" opacity=".65"/>
-    <circle cx="-12.1" cy="-7" r="10" fill="#A8C5A0" opacity=".65"/>
-    <circle cx="0" cy="0" r="8" fill="#3D6B4F" opacity=".5"/>
+    <g>
+      <path d="M-24,4 Q0,17 24,4 Q18,14 0,18 Q-18,14 -24,4 Z"
+            fill="#C8DFC4" opacity=".3" stroke="#3D6B4F" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".72"/>
+      <ellipse cx="0" cy="0" rx="22" ry="5.2" fill="#A8C5A0" opacity=".28" stroke="#6BAF8A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".64"/>
+      <ellipse cx="0" cy="18" rx="9" ry="2.6" fill="#C8DFC4" opacity=".18" stroke="#3D6B4F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".62"/>
+      <path d="M22,6 Q30,8 29,15 Q22,18 20,11"
+            fill="none" stroke="#6BAF8A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".66"/>
+      <path d="M-9,0 Q-3,-3 2,0 Q8,3 13,0"
+            fill="none" stroke="#3D6B4F" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".6"/>
+    </g>
+    <g transform="translate(-24,19) scale(.7)">
+      <path d="M-20,3 Q0,13 20,3 Q14,10 0,14 Q-14,10 -20,3 Z"
+            fill="#A8C5A0" opacity=".26" stroke="#6BAF8A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".64"/>
+      <ellipse cx="0" cy="0" rx="18" ry="4.3" fill="#C8DFC4" opacity=".27" stroke="#3D6B4F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".6"/>
+      <ellipse cx="0" cy="14" rx="7" ry="2.1" fill="#C8DFC4" opacity=".16" stroke="#6BAF8A" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".58"/>
+      <path d="M18,5 Q24,6 23,12 Q18,14 16,9"
+            fill="none" stroke="#3D6B4F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".6"/>
+      <path d="M-7,0 Q-2,-2 2,0 Q7,2 10,0"
+            fill="none" stroke="#6BAF8A" stroke-width="0.85" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".58"/>
+    </g>
   </g>
-  <g transform="translate(95,668)">
-    <circle cx="0" cy="-13" r="9" fill="#C8DFC4" opacity=".7"/>
-    <circle cx="11.3" cy="-6.5" r="9" fill="#C8DFC4" opacity=".7"/>
-    <circle cx="11.3" cy="6.5"  r="9" fill="#C8DFC4" opacity=".7"/>
-    <circle cx="0"   cy="13"  r="9" fill="#C8DFC4" opacity=".7"/>
-    <circle cx="-11.3" cy="6.5" r="9" fill="#C8DFC4" opacity=".7"/>
-    <circle cx="-11.3" cy="-6.5" r="9" fill="#C8DFC4" opacity=".7"/>
-    <circle cx="0" cy="0" r="8" fill="#6BAF8A" opacity=".48"/>
-  </g>
-  <g transform="translate(1085,695)">
-    <circle cx="0" cy="-10" r="7" fill="#A8C5A0" opacity=".65"/>
-    <circle cx="8.7" cy="-5" r="7" fill="#A8C5A0" opacity=".65"/>
-    <circle cx="8.7" cy="5"  r="7" fill="#A8C5A0" opacity=".65"/>
-    <circle cx="0"   cy="10" r="7" fill="#A8C5A0" opacity=".65"/>
-    <circle cx="-8.7" cy="5" r="7" fill="#A8C5A0" opacity=".65"/>
-    <circle cx="-8.7" cy="-5" r="7" fill="#A8C5A0" opacity=".65"/>
-    <circle cx="0" cy="0" r="6" fill="#3D6B4F" opacity=".45"/>
-  </g>
-  <g transform="translate(590,738)">
-    <circle cx="0" cy="-9" r="6.5" fill="#C8DFC4" opacity=".6"/>
-    <circle cx="7.8" cy="-4.5" r="6.5" fill="#C8DFC4" opacity=".6"/>
-    <circle cx="7.8" cy="4.5"  r="6.5" fill="#C8DFC4" opacity=".6"/>
-    <circle cx="0"   cy="9"   r="6.5" fill="#C8DFC4" opacity=".6"/>
-    <circle cx="-7.8" cy="4.5" r="6.5" fill="#C8DFC4" opacity=".6"/>
-    <circle cx="-7.8" cy="-4.5" r="6.5" fill="#C8DFC4" opacity=".6"/>
-    <circle cx="0" cy="0" r="5.5" fill="#6BAF8A" opacity=".4"/>
-  </g>
+
   <g transform="translate(1160,420)">
-    <ellipse cx="0" cy="-10" rx="5.5" ry="10" fill="#8ABF94" opacity=".55"/>
-    <ellipse cx="10" cy="0"  rx="10" ry="5.5" fill="#8ABF94" opacity=".55"/>
-    <ellipse cx="0" cy="10"  rx="5.5" ry="10" fill="#8ABF94" opacity=".55"/>
-    <ellipse cx="-10" cy="0" rx="10" ry="5.5" fill="#8ABF94" opacity=".55"/>
-    <circle cx="0" cy="0" r="5" fill="#3D6B4F" opacity=".4"/>
+    <g transform="rotate(-16)">
+      <path d="M0,11 C-15,5 -16,-10 0,-21 C16,-10 15,5 0,11 Z"
+            fill="#C8DFC4" opacity=".29" stroke="#3D6B4F" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".72"/>
+      <line x1="0" y1="9" x2="0" y2="-16" stroke="#3D6B4F" stroke-width="0.9" stroke-linecap="round" stroke-opacity=".62"/>
+      <line x1="0" y1="-4" x2="-7" y2="-9" stroke="#6BAF8A" stroke-width="0.85" stroke-linecap="round" stroke-opacity=".6"/>
+      <line x1="0" y1="-1" x2="7" y2="-8" stroke="#6BAF8A" stroke-width="0.85" stroke-linecap="round" stroke-opacity=".6"/>
+      <line x1="0" y1="2" x2="6" y2="-2" stroke="#6BAF8A" stroke-width="0.85" stroke-linecap="round" stroke-opacity=".6"/>
+    </g>
+    <g transform="translate(13,8) scale(.85) rotate(12)">
+      <path d="M0,11 C-15,5 -16,-10 0,-21 C16,-10 15,5 0,11 Z"
+            fill="#A8C5A0" opacity=".27" stroke="#6BAF8A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".68"/>
+      <line x1="0" y1="9" x2="0" y2="-16" stroke="#3D6B4F" stroke-width="0.9" stroke-linecap="round" stroke-opacity=".58"/>
+      <line x1="0" y1="-3" x2="-6" y2="-8" stroke="#6BAF8A" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".58"/>
+      <line x1="0" y1="0" x2="7" y2="-7" stroke="#6BAF8A" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".58"/>
+    </g>
+    <g transform="translate(-12,10) scale(.78) rotate(-34)">
+      <path d="M0,11 C-15,5 -16,-10 0,-21 C16,-10 15,5 0,11 Z"
+            fill="#C8DFC4" opacity=".26" stroke="#A8C5A0" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".62"/>
+      <line x1="0" y1="9" x2="0" y2="-16" stroke="#3D6B4F" stroke-width="0.85" stroke-linecap="round" stroke-opacity=".56"/>
+      <line x1="0" y1="-2" x2="-6" y2="-6" stroke="#6BAF8A" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".56"/>
+      <line x1="0" y1="1" x2="6" y2="-4" stroke="#6BAF8A" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".56"/>
+    </g>
   </g>
+
   <g transform="translate(38,380)">
-    <ellipse cx="0" cy="-9" rx="5" ry="9" fill="#C8DFC4" opacity=".6"/>
-    <ellipse cx="9" cy="0"  rx="9" ry="5" fill="#C8DFC4" opacity=".6"/>
-    <ellipse cx="0" cy="9"  rx="5" ry="9" fill="#C8DFC4" opacity=".6"/>
-    <ellipse cx="-9" cy="0" rx="9" ry="5" fill="#C8DFC4" opacity=".6"/>
-    <circle cx="0" cy="0" r="4.5" fill="#8ABF94" opacity=".38"/>
+    <g transform="rotate(18)">
+      <path d="M0,10 C-13,4 -14,-9 0,-18 C14,-9 13,4 0,10 Z"
+            fill="#A8C5A0" opacity=".28" stroke="#3D6B4F" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".7"/>
+      <line x1="0" y1="8" x2="0" y2="-14" stroke="#3D6B4F" stroke-width="0.9" stroke-linecap="round" stroke-opacity=".6"/>
+      <line x1="0" y1="-2" x2="-6" y2="-7" stroke="#6BAF8A" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".58"/>
+      <line x1="0" y1="0" x2="6" y2="-6" stroke="#6BAF8A" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".58"/>
+    </g>
+    <g transform="translate(10,-5) scale(.82) rotate(-14)">
+      <path d="M0,10 C-13,4 -14,-9 0,-18 C14,-9 13,4 0,10 Z"
+            fill="#C8DFC4" opacity=".27" stroke="#6BAF8A" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".66"/>
+      <line x1="0" y1="8" x2="0" y2="-14" stroke="#3D6B4F" stroke-width="0.85" stroke-linecap="round" stroke-opacity=".58"/>
+      <line x1="0" y1="-1" x2="-5" y2="-6" stroke="#6BAF8A" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".56"/>
+      <line x1="0" y1="1" x2="5" y2="-4" stroke="#6BAF8A" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".56"/>
+    </g>
+    <g transform="translate(-10,6) scale(.75) rotate(38)">
+      <path d="M0,10 C-13,4 -14,-9 0,-18 C14,-9 13,4 0,10 Z"
+            fill="#C8DFC4" opacity=".24" stroke="#A8C5A0" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".6"/>
+      <line x1="0" y1="8" x2="0" y2="-14" stroke="#3D6B4F" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".56"/>
+      <line x1="0" y1="0" x2="-5" y2="-5" stroke="#6BAF8A" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".54"/>
+      <line x1="0" y1="2" x2="5" y2="-3" stroke="#6BAF8A" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".54"/>
+    </g>
   </g>
-  <path d="M0,-13 L2,-2 L13,0 L2,2 L0,13 L-2,2 L-13,0 L-2,-2 Z"
-        transform="translate(175,120)" fill="none" stroke="#3D6B4F" stroke-width="1.8" opacity=".7"/>
-  <path d="M0,-10 L1.5,-1.5 L10,0 L1.5,1.5 L0,10 L-1.5,1.5 L-10,0 L-1.5,-1.5 Z"
-        transform="translate(1040,50)" fill="none" stroke="#A8C5A0" stroke-width="1.5" opacity=".65"/>
-  <path d="M0,-8 L1.2,-1.2 L8,0 L1.2,1.2 L0,8 L-1.2,1.2 L-8,0 L-1.2,-1.2 Z"
-        transform="translate(340,700)" fill="#A8C5A0" opacity=".5"/>
-  <path d="M0,-11 L1.7,-1.7 L11,0 L1.7,1.7 L0,11 L-1.7,1.7 L-11,0 L-1.7,-1.7 Z"
-        transform="translate(870,710)" fill="none" stroke="#3D6B4F" stroke-width="1.5" opacity=".5"/>
-  <path d="M0,-7 L1.1,-1.1 L7,0 L1.1,1.1 L0,7 L-1.1,1.1 L-7,0 L-1.1,-1.1 Z"
-        transform="translate(1110,310)" fill="#A8C5A0" opacity=".65"/>
-  <path d="M0,-9 L1.4,-1.4 L9,0 L1.4,1.4 L0,9 L-1.4,1.4 L-9,0 L-1.4,-1.4 Z"
-        transform="translate(140,540)" fill="none" stroke="#3D6B4F" stroke-width="1.5" opacity=".55"/>
-  <path d="M0,-6 L.9,-.9 L6,0 L.9,.9 L0,6 L-.9,.9 L-6,0 L-.9,-.9 Z"
-        transform="translate(700,55)" fill="#3D6B4F" opacity=".4"/>
-  <path d="M0,-8 L1.2,-1.2 L8,0 L1.2,1.2 L0,8 L-1.2,1.2 L-8,0 L-1.2,-1.2 Z"
-        transform="translate(440,30)" fill="none" stroke="#A8C5A0" stroke-width="1.4" opacity=".5"/>
-  <polygon transform="translate(1020,195) scale(.9)"
-    points="0,-13 3.1,-4.2 12.4,-3.8 5.0,2.0 7.6,11.2 0,6.5 -7.6,11.2 -5.0,2.0 -12.4,-3.8 -3.1,-4.2"
-    fill="none" stroke="#6BAF8A" stroke-width="1.8" opacity=".75"/>
-  <polygon transform="translate(200,690) scale(.75)"
-    points="0,-13 3.1,-4.2 12.4,-3.8 5.0,2.0 7.6,11.2 0,6.5 -7.6,11.2 -5.0,2.0 -12.4,-3.8 -3.1,-4.2"
-    fill="none" stroke="#A8C5A0" stroke-width="1.6" opacity=".6"/>
-  <polygon transform="translate(490,720) scale(.6)"
-    points="0,-13 3.1,-4.2 12.4,-3.8 5.0,2.0 7.6,11.2 0,6.5 -7.6,11.2 -5.0,2.0 -12.4,-3.8 -3.1,-4.2"
-    fill="none" stroke="#6BAF8A" stroke-width="1.5" opacity=".55"/>
-  <polygon transform="translate(1175,560) scale(.7)"
-    points="0,-13 3.1,-4.2 12.4,-3.8 5.0,2.0 7.6,11.2 0,6.5 -7.6,11.2 -5.0,2.0 -12.4,-3.8 -3.1,-4.2"
-    fill="none" stroke="#A8C5A0" stroke-width="1.5" opacity=".6"/>
-  <polygon transform="translate(60,290) scale(.65)"
-    points="0,-13 3.1,-4.2 12.4,-3.8 5.0,2.0 7.6,11.2 0,6.5 -7.6,11.2 -5.0,2.0 -12.4,-3.8 -3.1,-4.2"
-    fill="none" stroke="#6BAF8A" stroke-width="1.5" opacity=".65"/>
-  <path transform="translate(330,80) scale(.9)"
-    d="M0,8 C-8,4 -8,-4 0,-10 C8,-4 8,4 0,8 Z"
-    fill="none" stroke="#3D6B4F" stroke-width="2" opacity=".7"/>
-  <path transform="translate(905,55) scale(.75)"
-    d="M0,8 C-8,4 -8,-4 0,-10 C8,-4 8,4 0,8 Z"
-    fill="none" stroke="#6BAF8A" stroke-width="1.9" opacity=".65"/>
-  <path transform="translate(55,480) scale(.8)"
-    d="M0,8 C-8,4 -8,-4 0,-10 C8,-4 8,4 0,8 Z"
-    fill="none" stroke="#3D6B4F" stroke-width="1.8" opacity=".45"/>
-  <path transform="translate(1140,640) scale(.85)"
-    d="M0,8 C-8,4 -8,-4 0,-10 C8,-4 8,4 0,8 Z"
-    fill="none" stroke="#6BAF8A" stroke-width="1.8" opacity=".6"/>
-  <path transform="translate(760,738) scale(.7)"
-    d="M0,8 C-8,4 -8,-4 0,-10 C8,-4 8,4 0,8 Z"
-    fill="none" stroke="#3D6B4F" stroke-width="1.7" opacity=".55"/>
-  <circle cx="148" cy="35"   r="4"   fill="#A8C5A0" opacity=".55"/>
-  <circle cx="1068" cy="145" r="3.5" fill="#6BAF8A" opacity=".6"/>
-  <circle cx="490" cy="18"   r="3"   fill="#A8C5A0" opacity=".5"/>
-  <circle cx="720" cy="742"  r="4"   fill="#3D6B4F" opacity=".35"/>
-  <circle cx="1195" cy="220" r="3"   fill="#6BAF8A" opacity=".65"/>
-  <circle cx="25" cy="600"   r="3.5" fill="#A8C5A0" opacity=".5"/>
-  <circle cx="960" cy="745"  r="3"   fill="#3D6B4F" opacity=".5"/>
-  <g transform="translate(1045,718)" opacity=".6">
-    <ellipse cx="-8" cy="0" rx="8" ry="5" fill="#6BAF8A" opacity=".65" transform="rotate(-30,-8,0)"/>
-    <ellipse cx="0" cy="-6" rx="8" ry="5" fill="#6BAF8A" opacity=".65" transform="rotate(10,0,-6)"/>
-    <ellipse cx="8" cy="2"  rx="8" ry="5" fill="#6BAF8A" opacity=".65" transform="rotate(40,8,2)"/>
-    <circle cx="0" cy="0" r="4" fill="#3D6B4F" opacity=".4"/>
+
+  <g transform="translate(175,120)">
+    <line x1="0" y1="-9" x2="0" y2="9" stroke="#3D6B4F" stroke-width="1.3" stroke-linecap="round" stroke-opacity=".74"/>
+    <line x1="-7.8" y1="-4.5" x2="7.8" y2="4.5" stroke="#3D6B4F" stroke-width="1.3" stroke-linecap="round" stroke-opacity=".74"/>
+    <line x1="-7.8" y1="4.5" x2="7.8" y2="-4.5" stroke="#3D6B4F" stroke-width="1.3" stroke-linecap="round" stroke-opacity=".74"/>
+    <polygon points="0,-7.8 6.7,-3.9 6.7,3.9 0,7.8 -6.7,3.9 -6.7,-3.9" fill="none" stroke="#6BAF8A" stroke-width="1.2" stroke-linejoin="round" stroke-opacity=".66"/>
+    <line x1="0" y1="0" x2="0" y2="-7.8" stroke="#A8C5A0" stroke-width="0.9" stroke-linecap="round" stroke-opacity=".62"/>
+    <line x1="0" y1="0" x2="6.7" y2="-3.9" stroke="#A8C5A0" stroke-width="0.9" stroke-linecap="round" stroke-opacity=".62"/>
+    <line x1="0" y1="0" x2="6.7" y2="3.9" stroke="#A8C5A0" stroke-width="0.9" stroke-linecap="round" stroke-opacity=".62"/>
+    <line x1="0" y1="0" x2="0" y2="7.8" stroke="#A8C5A0" stroke-width="0.9" stroke-linecap="round" stroke-opacity=".62"/>
+    <line x1="0" y1="0" x2="-6.7" y2="3.9" stroke="#A8C5A0" stroke-width="0.9" stroke-linecap="round" stroke-opacity=".62"/>
+    <line x1="0" y1="0" x2="-6.7" y2="-3.9" stroke="#A8C5A0" stroke-width="0.9" stroke-linecap="round" stroke-opacity=".62"/>
   </g>
-  <g transform="translate(158,728)" opacity=".55">
-    <ellipse cx="-7" cy="0" rx="7" ry="4.5" fill="#6BAF8A" opacity=".65" transform="rotate(-25,-7,0)"/>
-    <ellipse cx="0" cy="-5" rx="7" ry="4.5" fill="#6BAF8A" opacity=".65" transform="rotate(15,0,-5)"/>
-    <ellipse cx="7" cy="2"  rx="7" ry="4.5" fill="#6BAF8A" opacity=".65" transform="rotate(45,7,2)"/>
-    <circle cx="0" cy="0" r="3.5" fill="#3D6B4F" opacity=".35"/>
+
+  <g transform="translate(1040,50) scale(.88)">
+    <line x1="0" y1="-9" x2="0" y2="9" stroke="#6BAF8A" stroke-width="1.25" stroke-linecap="round" stroke-opacity=".7"/>
+    <line x1="-7.8" y1="-4.5" x2="7.8" y2="4.5" stroke="#6BAF8A" stroke-width="1.25" stroke-linecap="round" stroke-opacity=".7"/>
+    <line x1="-7.8" y1="4.5" x2="7.8" y2="-4.5" stroke="#6BAF8A" stroke-width="1.25" stroke-linecap="round" stroke-opacity=".7"/>
+    <polygon points="0,-7.8 6.7,-3.9 6.7,3.9 0,7.8 -6.7,3.9 -6.7,-3.9" fill="none" stroke="#A8C5A0" stroke-width="1.2" stroke-linejoin="round" stroke-opacity=".64"/>
+    <line x1="0" y1="0" x2="0" y2="-7.8" stroke="#C8DFC4" stroke-width="0.85" stroke-linecap="round" stroke-opacity=".6"/>
+    <line x1="0" y1="0" x2="6.7" y2="-3.9" stroke="#C8DFC4" stroke-width="0.85" stroke-linecap="round" stroke-opacity=".6"/>
+    <line x1="0" y1="0" x2="6.7" y2="3.9" stroke="#C8DFC4" stroke-width="0.85" stroke-linecap="round" stroke-opacity=".6"/>
+    <line x1="0" y1="0" x2="0" y2="7.8" stroke="#C8DFC4" stroke-width="0.85" stroke-linecap="round" stroke-opacity=".6"/>
+    <line x1="0" y1="0" x2="-6.7" y2="3.9" stroke="#C8DFC4" stroke-width="0.85" stroke-linecap="round" stroke-opacity=".6"/>
+    <line x1="0" y1="0" x2="-6.7" y2="-3.9" stroke="#C8DFC4" stroke-width="0.85" stroke-linecap="round" stroke-opacity=".6"/>
   </g>
-  <g transform="translate(470,62)" opacity=".5">
-    <line x1="-7" y1="0" x2="7" y2="0" stroke="#A8C5A0" stroke-width="2" stroke-linecap="round"/>
-    <line x1="0" y1="-7" x2="0" y2="7" stroke="#A8C5A0" stroke-width="2" stroke-linecap="round"/>
+
+  <g transform="translate(870,710) scale(.94)">
+    <line x1="0" y1="-9" x2="0" y2="9" stroke="#3D6B4F" stroke-width="1.25" stroke-linecap="round" stroke-opacity=".7"/>
+    <line x1="-7.8" y1="-4.5" x2="7.8" y2="4.5" stroke="#3D6B4F" stroke-width="1.25" stroke-linecap="round" stroke-opacity=".7"/>
+    <line x1="-7.8" y1="4.5" x2="7.8" y2="-4.5" stroke="#3D6B4F" stroke-width="1.25" stroke-linecap="round" stroke-opacity=".7"/>
+    <polygon points="0,-7.8 6.7,-3.9 6.7,3.9 0,7.8 -6.7,3.9 -6.7,-3.9" fill="none" stroke="#6BAF8A" stroke-width="1.2" stroke-linejoin="round" stroke-opacity=".62"/>
+    <line x1="0" y1="0" x2="0" y2="-7.8" stroke="#A8C5A0" stroke-width="0.85" stroke-linecap="round" stroke-opacity=".58"/>
+    <line x1="0" y1="0" x2="6.7" y2="-3.9" stroke="#A8C5A0" stroke-width="0.85" stroke-linecap="round" stroke-opacity=".58"/>
+    <line x1="0" y1="0" x2="6.7" y2="3.9" stroke="#A8C5A0" stroke-width="0.85" stroke-linecap="round" stroke-opacity=".58"/>
+    <line x1="0" y1="0" x2="0" y2="7.8" stroke="#A8C5A0" stroke-width="0.85" stroke-linecap="round" stroke-opacity=".58"/>
+    <line x1="0" y1="0" x2="-6.7" y2="3.9" stroke="#A8C5A0" stroke-width="0.85" stroke-linecap="round" stroke-opacity=".58"/>
+    <line x1="0" y1="0" x2="-6.7" y2="-3.9" stroke="#A8C5A0" stroke-width="0.85" stroke-linecap="round" stroke-opacity=".58"/>
   </g>
-  <g transform="translate(840,40)" opacity=".45">
-    <line x1="-6" y1="0" x2="6" y2="0" stroke="#8ABF94" stroke-width="2" stroke-linecap="round"/>
-    <line x1="0" y1="-6" x2="0" y2="6" stroke="#8ABF94" stroke-width="2" stroke-linecap="round"/>
+
+  <g transform="translate(140,540) scale(.82)">
+    <line x1="0" y1="-9" x2="0" y2="9" stroke="#6BAF8A" stroke-width="1.2" stroke-linecap="round" stroke-opacity=".66"/>
+    <line x1="-7.8" y1="-4.5" x2="7.8" y2="4.5" stroke="#6BAF8A" stroke-width="1.2" stroke-linecap="round" stroke-opacity=".66"/>
+    <line x1="-7.8" y1="4.5" x2="7.8" y2="-4.5" stroke="#6BAF8A" stroke-width="1.2" stroke-linecap="round" stroke-opacity=".66"/>
+    <polygon points="0,-7.8 6.7,-3.9 6.7,3.9 0,7.8 -6.7,3.9 -6.7,-3.9" fill="none" stroke="#A8C5A0" stroke-width="1.2" stroke-linejoin="round" stroke-opacity=".6"/>
+    <line x1="0" y1="0" x2="0" y2="-7.8" stroke="#C8DFC4" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".56"/>
+    <line x1="0" y1="0" x2="6.7" y2="-3.9" stroke="#C8DFC4" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".56"/>
+    <line x1="0" y1="0" x2="6.7" y2="3.9" stroke="#C8DFC4" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".56"/>
+    <line x1="0" y1="0" x2="0" y2="7.8" stroke="#C8DFC4" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".56"/>
+    <line x1="0" y1="0" x2="-6.7" y2="3.9" stroke="#C8DFC4" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".56"/>
+    <line x1="0" y1="0" x2="-6.7" y2="-3.9" stroke="#C8DFC4" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".56"/>
   </g>
-  <g transform="translate(1130,490)" opacity=".5">
-    <line x1="-6" y1="0" x2="6" y2="0" stroke="#A8C5A0" stroke-width="2" stroke-linecap="round"/>
-    <line x1="0" y1="-6" x2="0" y2="6" stroke="#A8C5A0" stroke-width="2" stroke-linecap="round"/>
+
+  <g transform="translate(440,30) scale(.76)">
+    <line x1="0" y1="-9" x2="0" y2="9" stroke="#A8C5A0" stroke-width="1.2" stroke-linecap="round" stroke-opacity=".62"/>
+    <line x1="-7.8" y1="-4.5" x2="7.8" y2="4.5" stroke="#A8C5A0" stroke-width="1.2" stroke-linecap="round" stroke-opacity=".62"/>
+    <line x1="-7.8" y1="4.5" x2="7.8" y2="-4.5" stroke="#A8C5A0" stroke-width="1.2" stroke-linecap="round" stroke-opacity=".62"/>
+    <polygon points="0,-7.8 6.7,-3.9 6.7,3.9 0,7.8 -6.7,3.9 -6.7,-3.9" fill="none" stroke="#6BAF8A" stroke-width="1" stroke-linejoin="round" stroke-opacity=".58"/>
+    <line x1="0" y1="0" x2="0" y2="-7.8" stroke="#C8DFC4" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".55"/>
+    <line x1="0" y1="0" x2="6.7" y2="-3.9" stroke="#C8DFC4" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".55"/>
+    <line x1="0" y1="0" x2="6.7" y2="3.9" stroke="#C8DFC4" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".55"/>
+    <line x1="0" y1="0" x2="0" y2="7.8" stroke="#C8DFC4" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".55"/>
+    <line x1="0" y1="0" x2="-6.7" y2="3.9" stroke="#C8DFC4" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".55"/>
+    <line x1="0" y1="0" x2="-6.7" y2="-3.9" stroke="#C8DFC4" stroke-width="0.8" stroke-linecap="round" stroke-opacity=".55"/>
   </g>
-  <g transform="translate(28,155)" opacity=".45">
-    <line x1="-5" y1="0" x2="5" y2="0" stroke="#8ABF94" stroke-width="1.8" stroke-linecap="round"/>
-    <line x1="0" y1="-5" x2="0" y2="5" stroke="#8ABF94" stroke-width="1.8" stroke-linecap="round"/>
+
+  <g transform="translate(1020,195)">
+    <g transform="translate(-20,5)">
+      <rect x="-5" y="-32" width="10" height="34" rx="3.5" ry="3.5" fill="#A8C5A0" opacity=".25" stroke="#3D6B4F" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".72"/>
+      <ellipse cx="0" cy="-19" rx="5.4" ry="1.8" fill="#C8DFC4" opacity=".24" stroke="#6BAF8A" stroke-width="1" stroke-opacity=".62"/>
+      <ellipse cx="0" cy="-6" rx="5.4" ry="1.8" fill="#C8DFC4" opacity=".24" stroke="#6BAF8A" stroke-width="1" stroke-opacity=".62"/>
+      <path d="M0,-32 C3,-36 7,-35 8,-31 M0,-32 C-3,-36 -7,-35 -8,-31"
+            fill="none" stroke="#6BAF8A" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".62"/>
+    </g>
+    <g transform="translate(0,-2)">
+      <rect x="-5" y="-36" width="10" height="38" rx="3.5" ry="3.5" fill="#C8DFC4" opacity=".26" stroke="#3D6B4F" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".74"/>
+      <ellipse cx="0" cy="-22" rx="5.5" ry="1.8" fill="#A8C5A0" opacity=".22" stroke="#6BAF8A" stroke-width="1" stroke-opacity=".62"/>
+      <ellipse cx="0" cy="-8" rx="5.5" ry="1.8" fill="#A8C5A0" opacity=".22" stroke="#6BAF8A" stroke-width="1" stroke-opacity=".62"/>
+      <path d="M0,-36 C3,-40 7,-39 9,-35 M0,-36 C-3,-40 -7,-39 -9,-35"
+            fill="none" stroke="#6BAF8A" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".62"/>
+    </g>
+    <g transform="translate(20,7) scale(.9)">
+      <rect x="-5" y="-30" width="10" height="32" rx="3.5" ry="3.5" fill="#A8C5A0" opacity=".24" stroke="#6BAF8A" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".68"/>
+      <ellipse cx="0" cy="-18" rx="5.2" ry="1.7" fill="#C8DFC4" opacity=".22" stroke="#3D6B4F" stroke-width="0.95" stroke-opacity=".6"/>
+      <ellipse cx="0" cy="-6" rx="5.2" ry="1.7" fill="#C8DFC4" opacity=".22" stroke="#3D6B4F" stroke-width="0.95" stroke-opacity=".6"/>
+      <path d="M0,-30 C3,-34 6,-33 8,-30 M0,-30 C-3,-34 -6,-33 -8,-30"
+            fill="none" stroke="#6BAF8A" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".6"/>
+    </g>
+  </g>
+
+  <g transform="translate(200,690)">
+    <g transform="translate(-17,8) scale(.92)">
+      <rect x="-5" y="-33" width="10" height="35" rx="3.5" ry="3.5" fill="#C8DFC4" opacity=".25" stroke="#3D6B4F" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".72"/>
+      <ellipse cx="0" cy="-20" rx="5.2" ry="1.7" fill="#A8C5A0" opacity=".22" stroke="#6BAF8A" stroke-width="0.95" stroke-opacity=".62"/>
+      <ellipse cx="0" cy="-7" rx="5.2" ry="1.7" fill="#A8C5A0" opacity=".22" stroke="#6BAF8A" stroke-width="0.95" stroke-opacity=".62"/>
+      <path d="M0,-33 C3,-37 7,-36 8,-32 M0,-33 C-3,-37 -7,-36 -8,-32"
+            fill="none" stroke="#6BAF8A" stroke-width="0.92" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".6"/>
+    </g>
+    <g transform="translate(12,2) scale(1.02)">
+      <rect x="-5" y="-36" width="10" height="38" rx="3.5" ry="3.5" fill="#A8C5A0" opacity=".24" stroke="#6BAF8A" stroke-width="1.42" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".68"/>
+      <ellipse cx="0" cy="-22" rx="5.4" ry="1.8" fill="#C8DFC4" opacity=".22" stroke="#3D6B4F" stroke-width="0.95" stroke-opacity=".6"/>
+      <ellipse cx="0" cy="-8" rx="5.4" ry="1.8" fill="#C8DFC4" opacity=".22" stroke="#3D6B4F" stroke-width="0.95" stroke-opacity=".6"/>
+      <path d="M0,-36 C3,-40 7,-39 9,-35 M0,-36 C-3,-40 -7,-39 -9,-35"
+            fill="none" stroke="#6BAF8A" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".6"/>
+    </g>
+    <g transform="translate(30,10) scale(.82)">
+      <rect x="-5" y="-30" width="10" height="32" rx="3.5" ry="3.5" fill="#C8DFC4" opacity=".22" stroke="#A8C5A0" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".6"/>
+      <ellipse cx="0" cy="-18" rx="5" ry="1.6" fill="#A8C5A0" opacity=".2" stroke="#6BAF8A" stroke-width="0.9" stroke-opacity=".58"/>
+      <ellipse cx="0" cy="-6" rx="5" ry="1.6" fill="#A8C5A0" opacity=".2" stroke="#6BAF8A" stroke-width="0.9" stroke-opacity=".58"/>
+      <path d="M0,-30 C3,-34 6,-33 8,-30 M0,-30 C-3,-34 -6,-33 -8,-30"
+            fill="none" stroke="#6BAF8A" stroke-width="0.88" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".58"/>
+    </g>
+  </g>
+
+  <g transform="translate(330,80) scale(.95)">
+    <rect x="-9" y="-4" width="18" height="16" rx="6" ry="6" fill="#C8DFC4" opacity=".23" stroke="#3D6B4F" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".74"/>
+    <path d="M-8,-4 Q0,-12 8,-4" fill="none" stroke="#6BAF8A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".68"/>
+    <circle cx="0" cy="-12" r="1.5" fill="#A8C5A0" opacity=".34" stroke="#3D6B4F" stroke-width="0.9" stroke-opacity=".62"/>
+    <line x1="-5.5" y1="4" x2="5.5" y2="4" stroke="#6BAF8A" stroke-width="0.9" stroke-linecap="round" stroke-opacity=".62"/>
+  </g>
+
+  <g transform="translate(905,55) scale(.8)">
+    <rect x="-9" y="-4" width="18" height="16" rx="6" ry="6" fill="#A8C5A0" opacity=".22" stroke="#6BAF8A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".68"/>
+    <path d="M-8,-4 Q0,-12 8,-4" fill="none" stroke="#3D6B4F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".66"/>
+    <circle cx="0" cy="-12" r="1.4" fill="#C8DFC4" opacity=".32" stroke="#6BAF8A" stroke-width="0.85" stroke-opacity=".58"/>
+    <line x1="-5.5" y1="4" x2="5.5" y2="4" stroke="#3D6B4F" stroke-width="0.85" stroke-linecap="round" stroke-opacity=".58"/>
+  </g>
+
+  <g transform="translate(1128,646) scale(.76)">
+    <rect x="-8" y="-3" width="16" height="14" rx="5.5" ry="5.5" fill="#C8DFC4" opacity=".22" stroke="#3D6B4F" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".7"/>
+    <path d="M-7,-3 Q0,-10 7,-3" fill="none" stroke="#6BAF8A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".66"/>
+    <circle cx="0" cy="-10" r="1.3" fill="#A8C5A0" opacity=".31" stroke="#3D6B4F" stroke-width="0.8" stroke-opacity=".58"/>
+    <line x1="-5" y1="4" x2="5" y2="4" stroke="#6BAF8A" stroke-width="0.82" stroke-linecap="round" stroke-opacity=".58"/>
+    <path d="M-26,12 A6,6 0 0 1 -14,12 A6,6 0 0 1 -2,12 A6,6 0 0 1 10,12 A6,6 0 0 1 22,12"
+          fill="none" stroke="#6BAF8A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".62"/>
+    <path d="M-20,17 A6,6 0 0 1 -8,17 A6,6 0 0 1 4,17 A6,6 0 0 1 16,17"
+          fill="none" stroke="#A8C5A0" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".58"/>
+  </g>
+
+  <circle cx="148" cy="35" r="4" fill="#6BAF8A" opacity=".32"/>
+  <circle cx="1068" cy="145" r="3.5" fill="#6BAF8A" opacity=".3"/>
+  <circle cx="720" cy="742" r="4" fill="#6BAF8A" opacity=".27"/>
+  <circle cx="25" cy="600" r="3.5" fill="#6BAF8A" opacity=".29"/>
+
+  <g transform="translate(490,18)">
+    <circle cx="0" cy="0" r="4.1" fill="none" stroke="#A8C5A0" stroke-width="1" stroke-opacity=".62"/>
+    <circle cx="4.2" cy="0" r="4.1" fill="none" stroke="#6BAF8A" stroke-width="1" stroke-opacity=".58"/>
+    <circle cx="2.1" cy="3.7" r="4.1" fill="none" stroke="#C8DFC4" stroke-width="1" stroke-opacity=".56"/>
+  </g>
+  <g transform="translate(1195,220)">
+    <circle cx="0" cy="0" r="3.8" fill="none" stroke="#6BAF8A" stroke-width="0.95" stroke-opacity=".6"/>
+    <circle cx="3.9" cy="0" r="3.8" fill="none" stroke="#A8C5A0" stroke-width="0.95" stroke-opacity=".58"/>
+    <circle cx="2" cy="3.4" r="3.8" fill="none" stroke="#C8DFC4" stroke-width="0.95" stroke-opacity=".56"/>
+  </g>
+  <g transform="translate(960,745)">
+    <circle cx="0" cy="0" r="3.6" fill="none" stroke="#6BAF8A" stroke-width="0.95" stroke-opacity=".58"/>
+    <circle cx="3.6" cy="0" r="3.6" fill="none" stroke="#A8C5A0" stroke-width="0.95" stroke-opacity=".56"/>
+    <circle cx="1.8" cy="3.1" r="3.6" fill="none" stroke="#C8DFC4" stroke-width="0.95" stroke-opacity=".55"/>
+  </g>
+
+  <g transform="translate(1045,718)" opacity=".62">
+    <ellipse cx="-8" cy="0" rx="8" ry="5" fill="#A8C5A0" opacity=".3" transform="rotate(-30,-8,0)" stroke="#6BAF8A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".66"/>
+    <ellipse cx="0" cy="-6" rx="8" ry="5" fill="#A8C5A0" opacity=".3" transform="rotate(10,0,-6)" stroke="#6BAF8A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".66"/>
+    <ellipse cx="8" cy="2" rx="8" ry="5" fill="#A8C5A0" opacity=".3" transform="rotate(40,8,2)" stroke="#3D6B4F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".62"/>
+  </g>
+  <g transform="translate(158,728)" opacity=".58">
+    <ellipse cx="-7" cy="0" rx="7" ry="4.5" fill="#C8DFC4" opacity=".3" transform="rotate(-25,-7,0)" stroke="#6BAF8A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".64"/>
+    <ellipse cx="0" cy="-5" rx="7" ry="4.5" fill="#C8DFC4" opacity=".3" transform="rotate(15,0,-5)" stroke="#6BAF8A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".64"/>
+    <ellipse cx="7" cy="2" rx="7" ry="4.5" fill="#C8DFC4" opacity=".3" transform="rotate(45,7,2)" stroke="#3D6B4F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".6"/>
+  </g>
+
+  <g transform="translate(470,62)" opacity=".58">
+    <line x1="-7" y1="0" x2="7" y2="0" stroke="#A8C5A0" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="0" y1="-7" x2="0" y2="7" stroke="#A8C5A0" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(840,40)" opacity=".54">
+    <line x1="-6" y1="0" x2="6" y2="0" stroke="#6BAF8A" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="0" y1="-6" x2="0" y2="6" stroke="#6BAF8A" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(1130,490)" opacity=".56">
+    <line x1="-6" y1="0" x2="6" y2="0" stroke="#A8C5A0" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="0" y1="-6" x2="0" y2="6" stroke="#A8C5A0" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(28,155)" opacity=".52">
+    <line x1="-5" y1="0" x2="5" y2="0" stroke="#6BAF8A" stroke-width="1.4" stroke-linecap="round"/>
+    <line x1="0" y1="-5" x2="0" y2="5" stroke="#6BAF8A" stroke-width="1.4" stroke-linecap="round"/>
   </g>
 </svg>
