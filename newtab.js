@@ -396,19 +396,45 @@ function parseMessageToArticle(msg) {
   };
 }
 
+const BOILERPLATE_PATTERNS = [
+  /view\s+(this\s+)?(email|post|newsletter|message|it)\s+(in|on|online)/i,
+  /unsubscribe/i,
+  /manage\s+(your\s+)?preferences/i,
+  /update\s+(your\s+)?email/i,
+  /you('re| are)\s+receiving\s+this/i,
+  /click\s+here\s+to/i,
+  /privacy\s+policy/i,
+  /terms\s+of\s+(service|use)/i,
+  /follow\s+us\s+on/i,
+  /copyright\s+©/i,
+  /all\s+rights\s+reserved/i,
+];
+
+function isBoilerplateLine(line) {
+  return BOILERPLATE_PATTERNS.some(re => re.test(line));
+}
+
+function cleanText(text) {
+  const isUrl = w => /^https?:\/\//i.test(w);
+  return text
+    .split('\n')
+    .filter(line => line.trim().length > 0 && !isBoilerplateLine(line))
+    .join(' ')
+    .split(/\s+/)
+    .filter(w => w.length > 0 && !isUrl(w));
+}
+
 function extractSnippet(msg) {
-  // Try text/plain first — cleanest source of readable words
   const plain = findTextPlainPart(msg.payload);
   if (plain) {
-    const words = plain.trim().split(/\s+/).filter(w => w.length > 0);
+    const words = cleanText(plain);
     return words.slice(0, 30).join(' ') + (words.length > 30 ? '…' : '');
   }
-  // Fall back to stripping HTML
   const html = getBodyHtml(msg);
   if (html) {
-    const doc   = new DOMParser().parseFromString(html, 'text/html');
-    doc.querySelectorAll('style,script,head').forEach(el => el.remove());
-    const words = (doc.body?.textContent || '').trim().split(/\s+/).filter(w => w.length > 1);
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    doc.querySelectorAll('style,script,head,footer,nav').forEach(el => el.remove());
+    const words = cleanText(doc.body?.textContent || '');
     return words.slice(0, 30).join(' ') + (words.length > 30 ? '…' : '');
   }
   return '';
@@ -507,7 +533,10 @@ function base64Decode(data) {
         '%' + c.charCodeAt(0).toString(16).padStart(2, '0')
       ).join('')
     );
-  } catch { return atob(standard); }
+  } 
+  catch {
+    try { return atob(standard); } catch { return ''; }
+  }
 }
 
 
@@ -515,7 +544,8 @@ function base64Decode(data) {
 
 function setCookieMascot() {
   const idx = Math.floor(Date.now() / (24 * 60 * 60 * 1000)) % 8;
-  document.getElementById('cookie-img').src = COOKIE_ASSETS[idx];
+  const el = document.getElementById('cookie-img');
+  if (el) el.src = COOKIE_ASSETS[idx];
 }
 
 
