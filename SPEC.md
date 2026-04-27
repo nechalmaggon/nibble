@@ -1,7 +1,7 @@
 # Nibble — Product Specification
 
-**Version:** 1.6
-**Last updated:** 2026-04-10
+**Version:** 1.7
+**Last updated:** 2026-04-24
 
 ---
 
@@ -94,10 +94,18 @@ These patterns exclude automated notifications, travel booking confirmations, fo
 | `author` | string | Sender display name |
 | `source` | string | Sender's email domain (e.g. `substack.com`) |
 | `url` | string | "View in browser" link from email body, or fallback to Gmail starred URL |
-| `description` | string | First 30 words of plain-text body (or stripped HTML) |
+| `description` | string | First 30 words of plain-text body (or stripped HTML), with URLs and boilerplate lines (e.g. "View in browser", "Unsubscribe", "Privacy Policy") filtered out before extraction |
 | `receivedAt` | number | Timestamp from `Date` email header |
 | `read` | boolean | Set to `true` when user clicks Nibble button |
 | `addedAt` | number | Timestamp when added to local store |
+
+### Description Extraction (`extractSnippet`)
+
+1. Tries the `text/plain` MIME part first; falls back to `text/html`.
+2. Before word extraction, entire lines matching any of the following boilerplate patterns are dropped: "View this email/post in browser", "Unsubscribe", "Manage preferences", "Update your email", "You are receiving this", "Click here to", "Privacy Policy", "Terms of service", "Follow us on", "Copyright ©", "All rights reserved".
+3. Any individual word that is a URL (`http://` or `https://`) is also removed.
+4. The HTML fallback additionally strips `<footer>`, `<nav>`, `<style>`, `<script>`, and `<head>` elements before reading `textContent`.
+5. Returns an empty string if both paths fail or produce no valid words.
 
 ### "View in Browser" URL Extraction
 
