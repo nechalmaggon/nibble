@@ -1,6 +1,6 @@
 # Setting Up Nibble
 
-Nibble is a Chrome extension that surfaces one starred newsletter from your Gmail on every new tab. Follow the steps below to get it running locally.
+Nibble is a Chrome extension that surfaces one starred newsletter from your Gmail everyday on a new tab. Follow the steps below to get it running locally.
 
 ---
 

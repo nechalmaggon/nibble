@@ -6,6 +6,6 @@ Nibble is a Chrome extension for the chronically over-subscribed. Star newslette
 
 
 
-### Getting Started
+## Getting Started
 
-Nibble connects to your Gmail account, so there's a one-time 10 mins setup to get it running locally. You can follow the **[Setup Guide](SETUP.md)**.
+Nibble connects to your Gmail account, so there's a one-time 10 mins setup to get it running locally. You can follow the setup guide **[here](SETUP.md)**.
