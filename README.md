@@ -4,7 +4,7 @@ Nibble is a Chrome extension for the chronically over-subscribed. Star newslette
 
 <img width="1440" height="813" alt="Screenshot 2026-06-19 at 9 41 46 AM" src="https://github.com/user-attachments/assets/8dd59172-d6c0-4844-8b28-d7ca5678b816" />
 
----
+
 
 ### Getting Started
 
